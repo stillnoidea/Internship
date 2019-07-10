@@ -22,8 +22,8 @@ class MailTest {
     private static final String PASSWORD_GMAIL = "AniaMaKota123";
     private static final String RECEIVER_GMAIL = "daria.krupinska@globallogic.com";
     private static final String MAIL_SUBJECT = "Trolololo";
-    private static final String MAIL_ATTACHMENT_TICKETS = "C:\\Users\\urszula.mazur\\IdeaProjects\\TestEurotrail\\validity_states.csv";
-    private static final String MAIL_ATTACHMENT_LINKS = "C:\\Users\\urszula.mazur\\IdeaProjects\\Mail\\results.csv";
+    //TODO change the attachment file path, so the program work properly
+    private static final String MAIL_ATTACHMENT = "YOUR FILE PATH e.g. C:\\file.csv";
     private static final String PAGE_LOGIN_INPUT = "identifierId";
     private static final String PAGE_NEXT_BUTTON = "identifierNext";
     private static final String PAGE_PASSWORD_INPUT = "password";
@@ -42,6 +42,7 @@ class MailTest {
 
 
     static Stream<WebDriver> setUp() {
+
         System.setProperty(DRIVER, DRIVER_PATH);
         WebDriver driver = new ChromeDriver();
         return Stream.of(driver);
@@ -74,7 +75,7 @@ class MailTest {
         driver.findElement(By.xpath(PAGE_MAIL_RECEIVER_INPUT)).sendKeys(RECEIVER_GMAIL);
         driver.findElement(By.xpath(PAGE_MAIL_SUBJECT_INPUT)).sendKeys(MAIL_SUBJECT);
 
-        driver.findElement(By.xpath(PAGE_ATTACHMENT_INPUT)).sendKeys(MAIL_ATTACHMENT_TICKETS);
+        driver.findElement(By.xpath(PAGE_ATTACHMENT_INPUT)).sendKeys(MAIL_ATTACHMENT);
         try {
             Thread.sleep(4000);
         } catch (InterruptedException e) {
