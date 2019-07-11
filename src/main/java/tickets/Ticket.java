@@ -14,6 +14,8 @@ public class Ticket {
     private Status status;
     private ValidityPeriod validityPeriod;
     private ePassDetails passDetails;
+
+    
 }
 
 class ValidityPeriod{

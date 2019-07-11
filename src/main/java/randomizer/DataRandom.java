@@ -1,38 +1,65 @@
 package randomizer;
 
-import jdk.internal.vm.compiler.collections.Pair;
+
+import com.sun.tools.javac.util.Pair;
+import enums.Kind;
+import enums.PassType;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Random;
 
 public class DataRandom {
     public static Random generator = new java.util.Random();
+    private RandomDate randomDate = new RandomDate();
 
-//    public static String getName(){
-////        NameGenerator generator = new NameGenerator();
-//    }
+    public static String getName() {
+        return NameGenerator.generateName();
+    }
 
-//    public Pair<Date, Date> getNotValidPeriod() {
-//        RandomDate rd = new RandomDate(LocalDate.of(2018, 1, 1), LocalDate.now());
-//    }
-//
-//    public Pair<Date, Date> getValidPeriod() {
-//        RandomDate rd = new RandomDate(LocalDate.of(2018, 1, 1), LocalDate.now().minusDays(1));
-//        RandomDate rd1 = new RandomDate(LocalDate.now().plusDays(1), LocalDate.of(2020, 12, 30));
-//    }
-//
-//    public Pair<Date, Date> getNotStartedPeriod() {
-//        RandomDate rd = new RandomDate(LocalDate.now().plusDays(1), LocalDate.of(2020, 12, 30));
-//    }
-//
-//    public Pair<Date, Date> getValidYesterdayPeriod() {
-//        RandomDate rd = new RandomDate(LocalDate.of(2018, 1, 1), LocalDate.now().minusDays(1));
-//    }
-//
-//    public String generateName() {
-//        return NameGenerator.generateName();
-//    }
+    public Pair<LocalDate, LocalDate> getNotValidPeriod(int interval) {
+        randomDate.setDaysInterval(interval);
+        randomDate.setMaxDate(LocalDate.now().minusDays(3));
+        LocalDate end = randomDate.nextDateByDates();
+        randomDate.setIntervalDate(end);
+        randomDate.setFurtherDate(false);
+        return new Pair<>(randomDate.nextDateByInterval(), end);
+    }
+
+    public Pair<LocalDate, LocalDate> getValidPeriod(int interval) {
+        int daysToEnd = generator.nextInt(interval);
+        LocalDate today = LocalDate.now();
+        return new Pair<>(today.minusDays(interval - daysToEnd), today.plusDays(daysToEnd));
+    }
+
+    public Pair<LocalDate, LocalDate> getNotStartedPeriod(int interval) {
+        randomDate.setDaysInterval(interval);
+        randomDate.setMinDate(LocalDate.now().plusDays(1));
+        LocalDate start = randomDate.nextDateByDates();
+        randomDate.setIntervalDate(start);
+        randomDate.setFurtherDate(true);
+        return new Pair<>(randomDate.nextDateByInterval(), start);
+    }
+
+    public Pair<LocalDate, LocalDate> getValidYesterdayPeriod(int interval) {
+        randomDate.setDaysInterval(interval);
+        randomDate.setIntervalDate(LocalDate.now().minusDays(2));
+        LocalDate start = randomDate.nextDateByInterval();
+        return new Pair<>(start, LocalDate.now().minusDays(1));
+    }
+
+    public String generateName() {
+        return NameGenerator.generateName();
+    }
+
+    public PassType getValidityPassType() {
+        PassType[] list = PassType.values();
+        return list[generator.nextInt(list.length)];
+    }
+
+    public Kind getValidityKind() {
+        Kind[] list = Kind.values();
+        return list[generator.nextInt(list.length)];
+    }
 }
 
 class NameGenerator {
@@ -54,21 +81,15 @@ class NameGenerator {
 }
 
 class RandomDate {
-    private LocalDate minDate;
-    private LocalDate maxDate;
-    private LocalDate intervalDate;
-    private int daysInterval;
-    private boolean isFurtherDate;
+    private LocalDate minDate = LocalDate.of(2017, 1, 1);
+    private LocalDate maxDate = LocalDate.of(2025, 12, 30);
+    private LocalDate intervalDate = LocalDate.now();
+    private int daysInterval = 7;
 
-    RandomDate(LocalDate minDate, LocalDate maxDate) {
-        this.minDate = minDate;
-        this.maxDate = maxDate;
-    }
 
-    RandomDate(LocalDate date, int interval, boolean isFurtherDate) {
-        this.intervalDate = date;
-        this.isFurtherDate = isFurtherDate;
-        this.daysInterval = interval;
+    private boolean isFurtherDate = true;
+
+    RandomDate() {
     }
 
     LocalDate nextDateByDates() {
@@ -80,7 +101,7 @@ class RandomDate {
 
     LocalDate nextDateByInterval() {
         int minDay = (int) intervalDate.toEpochDay();
-        long randomDay = 0;
+        long randomDay;
         if (isFurtherDate) {
             randomDay = minDay + DataRandom.generator.nextInt(daysInterval);
         } else randomDay = minDay - DataRandom.generator.nextInt(daysInterval);
@@ -89,37 +110,27 @@ class RandomDate {
 
     @Override
     public String toString() {
-        return "RandomDate{" +
-                "maxDate=" + maxDate +
-                ", minDate=" + minDate +
-                '}';
+        return "RandomDate{" + "maxDate=" + maxDate + ", minDate=" + minDate + " intervalDate" + intervalDate +
+                "interval " + daysInterval + "is further interval " + isFurtherDate + '}';
     }
 
-    void changeIntervalTurn() {
-        isFurtherDate = !isFurtherDate;
-    }
-
-    public int getDaysInterval() {
-        return daysInterval;
-    }
-
-    public void setDaysInterval(int daysInterval) {
+    void setDaysInterval(int daysInterval) {
         this.daysInterval = daysInterval;
     }
 
-    public LocalDate getMinDate() {
-        return minDate;
-    }
-
-    public void setMinDate(LocalDate minDate) {
+    void setMinDate(LocalDate minDate) {
         this.minDate = minDate;
     }
 
-    public LocalDate getMaxDate() {
-        return maxDate;
+    void setMaxDate(LocalDate maxDate) {
+        this.maxDate = maxDate;
     }
 
-    public void setMaxDate(LocalDate maxDate) {
-        this.maxDate = maxDate;
+    void setIntervalDate(LocalDate intervalDate) {
+        this.intervalDate = intervalDate;
+    }
+
+    void setFurtherDate(boolean furtherDate) {
+        isFurtherDate = furtherDate;
     }
 }
