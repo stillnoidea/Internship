@@ -12,7 +12,7 @@ public enum Kind {
     DENMARK("Denmark Mobile Pass"),
     FINLAND("Finland Mobile Pass"),
     FRANCE("France Mobile Pass"),
-    GREAT_BRITAN("Great-Britain Mobile Pass"),
+    GREAT_BRITAIN("Great-Britain Mobile Pass"),
     GREEK("Greek Islands Mobile Pass"),
     GREECE("Greece Mobile Pass"),
     HUNGARY("Hungary Mobile Pass"),

@@ -30,6 +30,10 @@ public class Ticket {
     }
 
 
+//    public String toString(){
+//        String result = "";
+//        result+=
+//    }
 }
 
 class ValidityPeriod {
@@ -45,6 +49,8 @@ class ePassDetails {
 
     ePassDetails(String kind, String passType, String name, String surname, String passportNo) {
         traveler = new Traveler(name, surname, passportNo);
+        this.kind = findKind(kind);
+        this.type = findPassType(passType);
     }
 
     ePassDetails(Kind kind, PassType passType, String name, String surname, String passportNo) {
@@ -53,15 +59,25 @@ class ePassDetails {
         type = passType;
     }
 
-//    private Kind findKind(String kind) {
-//        Kind[] list = Kind.values();
-//        for (int i = 0; i < list.length; i++) {
-//            if (list[i].getKind().equals(kind)) {
-//                return list[i];
-//            }
-//        }
-//
-//    }
+    private Kind findKind(String kind) {
+        Kind[] list = Kind.values();
+        for (int i = 0; i < list.length; i++) {
+            if (list[i].getKind().equals(kind)) {
+                return list[i];
+            }
+        }
+        return null;
+    }
+
+    private PassType findPassType(String pass) {
+        PassType[] list = PassType.values();
+        for (int i = 0; i < list.length; i++) {
+            if (list[i].getType().equals(pass)) {
+                return list[i];
+            }
+        }
+        return null;
+    }
 }
 
 class Traveler {
@@ -73,5 +89,26 @@ class Traveler {
         this.name = name;
         this.surname = surname;
         this.passport = passport;
+    }
+
+    public String getSecretFullName() {
+        int size = surname.length();
+        StringBuilder sb = new StringBuilder();
+        sb.append(name.charAt(0)).append(". ").append(surname.charAt(0));
+        for (int i = 0; i < size - 2; i++) {
+            sb.append("*");
+        }
+        sb.append(surname.charAt(size - 1));
+        return sb.toString();
+    }
+
+    public String getSecretPassport() {
+        StringBuilder sb = new StringBuilder();
+        int size = passport.length();
+        for (int i = 0; i < size - 2; i++) {
+            sb.append("*");
+        }
+        sb.append(passport.charAt(size - 2)).append(passport.charAt(size - 1));
+        return sb.toString();
     }
 }
