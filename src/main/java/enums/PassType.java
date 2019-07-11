@@ -6,7 +6,7 @@ public enum PassType {
     FST_YOUTH("1st class Youth"),
     SC_SENIOR("2nd class Senior"),
     SC_ADULT("2nd class Adult"),
-    SC_Youth("2nd class Youth");
+    SC_YOUTH("2nd class Youth");
 
     private String type;
 
