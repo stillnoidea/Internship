@@ -4,6 +4,7 @@ import enums.Kind;
 import enums.PassType;
 import enums.Status;
 import enums.ValidityState;
+import randomizer.DataRandom;
 
 import java.util.Date;
 
@@ -14,10 +15,12 @@ public class Ticket {
     private Status status;
     private ValidityPeriod validityPeriod;
     private ePassDetails passDetails;
+    private DataRandom random = new DataRandom();
 
     public Ticket(ValidityState state, Status status) {
         this.validityState = state;
         this.status = status;
+        passDetails = new ePassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber());
     }
 
     public Ticket(ValidityState state, Status status, String name, String surname, String passportNo, String passKind, String passType) {
@@ -42,6 +45,12 @@ class ePassDetails {
 
     ePassDetails(String kind, String passType, String name, String surname, String passportNo) {
         traveler = new Traveler(name, surname, passportNo);
+    }
+
+    ePassDetails(Kind kind, PassType passType, String name, String surname, String passportNo) {
+        traveler = new Traveler(name, surname, passportNo);
+        this.kind = kind;
+        type = passType;
     }
 
 //    private Kind findKind(String kind) {
