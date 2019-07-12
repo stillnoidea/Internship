@@ -5,5 +5,5 @@ public enum Status {
     EXPIRED,
     NOT_STARTED,
     BLOCKED,
-    REFUNDED;
+    REFUNDED
 }

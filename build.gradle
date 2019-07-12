@@ -15,4 +15,5 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
 
     implementation 'com.github.javafaker:javafaker:0.18'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

@@ -4,111 +4,89 @@ import enums.Kind;
 import enums.PassType;
 import enums.Status;
 import enums.ValidityState;
-import randomizer.DataRandom;
+import randomizer.DataGenerator;
 
-import java.util.Date;
+import com.sun.tools.javac.util.Pair;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Ticket {
     private ValidityState validityState;
-    private Date activationDate;
-    private Date validityDate;
-    private Status status;
-    private ValidityPeriod validityPeriod;
-    private ePassDetails passDetails;
-    private DataRandom random = new DataRandom();
+    private LocalDateTime activationDate;
+    private LocalDate validityDate;
+    private transient Status status;
+    private transient ValidityPeriod validityPeriod;
+    private EPassDetails epassDetails;
+    private transient DataGenerator random = new DataGenerator();
 
     public Ticket(ValidityState state, Status status) {
         this.validityState = state;
         this.status = status;
-        passDetails = new ePassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber());
+        initializeDates();
+        epassDetails = new EPassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber(), status, validityPeriod);
+
+
     }
 
     public Ticket(ValidityState state, Status status, String name, String surname, String passportNo, String passKind, String passType) {
         this.validityState = state;
         this.status = status;
-        passDetails = new ePassDetails(passKind, passType, name, surname, passportNo);
+        initializeDates();
+        epassDetails = new EPassDetails(passKind, passType, name, surname, passportNo, status, validityPeriod);
+
     }
 
-
-//    public String toString(){
-//        String result = "";
-//        result+=
-//    }
-}
-
-class ValidityPeriod {
-    Date startDate;
-    Date endDate;
-}
-
-
-class ePassDetails {
-    private Kind kind;
-    private PassType type;
-    private Traveler traveler;
-
-    ePassDetails(String kind, String passType, String name, String surname, String passportNo) {
-        traveler = new Traveler(name, surname, passportNo);
-        this.kind = findKind(kind);
-        this.type = findPassType(passType);
+    public void dosmth() {
     }
 
-    ePassDetails(Kind kind, PassType passType, String name, String surname, String passportNo) {
-        traveler = new Traveler(name, surname, passportNo);
-        this.kind = kind;
-        type = passType;
+    private void initializeDates() {
+        initializePeriod();
+        activationDate = random.getActivationDate(validityDate);
     }
 
-    private Kind findKind(String kind) {
-        Kind[] list = Kind.values();
-        for (int i = 0; i < list.length; i++) {
-            if (list[i].getKind().equals(kind)) {
-                return list[i];
-            }
+    private void initializePeriod() {
+        switch (status) {
+            case VALID:
+                validityPeriod = new ValidityPeriod(random.getValidPeriod());
+                setDateValidityPass();
+                break;
+            case EXPIRED:
+                if (!validityState.name().equals("VALID_YESTERDAY")) {
+                    validityPeriod = new ValidityPeriod(random.getExpiredPeriod());              //expired
+                    validityDate = random.getNotValidDate(validityPeriod.getPeriod());           // not_valid
+                } else {
+                    validityPeriod = new ValidityPeriod(random.getValidYesterdayPeriod());      //expired
+                    validityDate = random.getValidYesterdayDate();                                //val yesterday
+                }
+                break;
+            case NOT_STARTED:
+                validityPeriod = new ValidityPeriod(random.getNotStartedPeriod());              //not started
+                if (validityState.name().equals("NOT_STARTED")) {                                //not started
+                    validityDate = random.getDateBetween(validityPeriod.getPeriod());
+                } else {
+                    validityDate = random.getNotValidDate(validityPeriod.getPeriod());            //not valid with or without date
+                }
+                break;
+            default:
+                validityPeriod = new ValidityPeriod(random.getPeriod());            //blocked/refunded
+                validityDate = random.getNotValidDate(validityPeriod.getPeriod());    //not valid with or without date
         }
-        return null;
     }
 
-    private PassType findPassType(String pass) {
-        PassType[] list = PassType.values();
-        for (int i = 0; i < list.length; i++) {
-            if (list[i].getType().equals(pass)) {
-                return list[i];
-            }
+    private void setDateValidityPass() {
+        switch (validityState) {
+            case NOT_VALID:
+                validityDate = random.getNotValidDate(validityPeriod.getPeriod());
+            case VALID_TODAY:
+                validityDate = random.getValidTodayDate();
+            case VALID_YESTERDAY:
+                validityDate = random.getValidYesterdayDate();
+            case NOT_STARTED:
+                validityDate = random.getDateBetween(new Pair<>(validityPeriod.getStartDate(), random.getValidYesterdayDate()));
         }
-        return null;
-    }
-}
-
-class Traveler {
-    private String name;
-    private String surname;
-    private String passport;
-
-    Traveler(String name, String surname, String passport) {
-        this.name = name;
-        this.surname = surname;
-        this.passport = passport;
     }
 
-    public String getSecretFullName() {
-        int size = surname.length();
-        StringBuilder sb = new StringBuilder();
-        sb.append(name.charAt(0)).append(". ").append(surname.charAt(0));
-        for (int i = 0; i < size - 2; i++) {
-            sb.append("*");
-        }
-        sb.append(surname.charAt(size - 1));
-        return sb.toString();
-    }
 
-    public String getSecretPassport() {
-        StringBuilder sb = new StringBuilder();
-        int size = passport.length();
-        for (int i = 0; i < size - 2; i++) {
-            sb.append("*");
-        }
-        sb.append(passport.charAt(size - 2)).append(passport.charAt(size - 1));
-        return sb.toString();
-    }
+
 }

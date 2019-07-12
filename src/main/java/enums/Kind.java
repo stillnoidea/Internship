@@ -1,6 +1,6 @@
 package enums;
 
-import randomizer.DataRandom;
+import randomizer.DataGenerator;
 
 public enum Kind {
     GLOBAL_PASS("Global Mobile Pass"),
@@ -44,6 +44,6 @@ public enum Kind {
 
     public String randomKind() {
         Kind[] list = values();
-        return list[DataRandom.generator.nextInt(list.length)].getKind();
+        return list[DataGenerator.generator.nextInt(list.length)].getKind();
     }
 }
