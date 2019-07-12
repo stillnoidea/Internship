@@ -8,6 +8,11 @@ class ValidityPeriod {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    ValidityPeriod() {
+        startDate = null;
+        endDate = null;
+    }
+
     ValidityPeriod(Pair<LocalDate, LocalDate> dates) {
         startDate = dates.fst;
         endDate = dates.snd;

@@ -26,15 +26,19 @@ public class DataGenerator {
     }
 
     public Pair<LocalDate, LocalDate> getExpiredPeriod() {
-        return getRandomPeriod(new Date(177, 0, 1), new Date());
+        return getRandomPeriod(new Date(117, 0, 1), new Date());
     }
 
     public Pair<LocalDate, LocalDate> getNotStartedPeriod() {
-        return getRandomPeriod(new Date(), new Date(125, 12, 30));
+        if (isRandomDate()) {
+            return getRandomPeriod(new Date(), new Date(125, 12, 30));
+        } else return null;
     }
 
     public Pair<LocalDate, LocalDate> getPeriod() {
-        return getRandomPeriod(new Date(177, 0, 1), new Date(125, 12, 30));
+        if (isRandomDate()) {
+            return getRandomPeriod(new Date(117, 0, 1), new Date(125, 12, 30));
+        } else return null;
     }
 
     public Pair<LocalDate, LocalDate> getValidPeriod() {
@@ -48,7 +52,7 @@ public class DataGenerator {
     public Pair<LocalDate, LocalDate> getValidYesterdayPeriod() {
         int interval = DataGenerator.generator.nextInt(90);
         LocalDate end = getValidYesterdayDate();
-        LocalDate start = LocalDate.now().minusDays(interval - 1);
+        LocalDate start = LocalDate.now().minusDays((interval + 1));
         return new Pair<>(start, end);
     }
 
@@ -69,7 +73,8 @@ public class DataGenerator {
     public LocalDate getNotValidDate(Pair<LocalDate, LocalDate> dates) {
         if (isRandomDate()) {
             return getDateBetween(dates);
-        } else return null;
+        }
+        return null;
     }
 
     private boolean isRandomDate() {

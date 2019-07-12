@@ -1,8 +1,10 @@
 package tickets;
 
+import com.google.gson.JsonObject;
+
 class Traveler {
-    private String securedFullName;
-    private String securedPassport;
+    private String fullName;
+    private String passportNumber;
     private transient String name;
     private transient String surname;
     private transient String passport;
@@ -11,8 +13,16 @@ class Traveler {
         this.name = name;
         this.surname = surname;
         this.passport = passport;
-        securedFullName = getSecretFullName();
-        securedPassport = getSecretPassport();
+        fullName = getSecretFullName();
+        passportNumber = getSecretPassport();
+    }
+
+    Traveler(JsonObject traveler) {
+        this.name = traveler.get("travelerName").getAsString();
+        this.surname = traveler.get("travelerSurname").getAsString();
+        this.passport = traveler.get("passportNumber").getAsString();
+        fullName = getSecretFullName();
+        passportNumber = getSecretPassport();
     }
 
     private String getSecretFullName() {
@@ -45,11 +55,11 @@ class Traveler {
     }
 
     public String getSecuredFullName() {
-        return securedFullName;
+        return fullName;
     }
 
     public String getSecuredPassport() {
-        return securedPassport;
+        return passportNumber;
     }
 
 

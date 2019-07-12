@@ -1,8 +1,7 @@
 package tickets;
 
-import com.google.gson.*;
-import enums.Status;
-import enums.ValidityState;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import json.LocalDateAdapter;
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +11,6 @@ class TicketTest {
 
     @Test
     void dosmthTest() {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                .create();
-        Ticket t = new Ticket(ValidityState.valueOf("NOT_VALID"), Status.valueOf("VALID"));
-
-        System.out.println(gson.toJson(t));
     }
 
 }
