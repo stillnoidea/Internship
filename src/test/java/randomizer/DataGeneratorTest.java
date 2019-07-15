@@ -50,8 +50,8 @@ class DataGeneratorTest {
     void getValidPeriod() {
         Pair<LocalDate, LocalDate> date = dr.getValidPeriod();
         assertTrue(date.fst.isBefore(date.snd));
-        assertTrue(date.fst.isBefore(LocalDate.now()));
-        assertTrue(date.snd.isAfter(LocalDate.now()));
+        assertTrue(date.fst.isBefore(LocalDate.now())|| date.fst.isEqual(LocalDate.now()));
+        assertTrue(date.snd.isAfter(LocalDate.now()) || date.snd.isEqual(LocalDate.now()));
     }
 
     @RepeatedTest(10)
