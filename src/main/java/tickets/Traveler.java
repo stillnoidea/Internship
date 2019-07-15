@@ -13,8 +13,12 @@ class Traveler {
         this.name = name;
         this.surname = surname;
         this.passport = passport;
-        fullName = getSecretFullName();
-        passportNumber = getSecretPassport();
+        if (!passport.equals("")) {
+            passportNumber = getSecretPassport();
+        } else this.passport = passportNumber = null;
+        if (!name.equals("") && !surname.equals("")) {
+            fullName = getSecretFullName();
+        } else this.name = this.surname = fullName = null;
     }
 
     Traveler(JsonObject traveler) {
@@ -26,6 +30,9 @@ class Traveler {
     }
 
     private String getSecretFullName() {
+        if (name == null) {
+            return null;
+        }
         int size = surname.length();
         StringBuilder sb = new StringBuilder();
         sb.append(name.charAt(0)).append(". ").append(surname.charAt(0));
@@ -37,12 +44,15 @@ class Traveler {
     }
 
     private String getSecretPassport() {
+        if (passport == null) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         int size = passport.length();
         for (int i = 0; i < 6; i++) {
             sb.append("*");
         }
-        sb.append(passport.charAt(size - 2)).append(passport.charAt(size - 1));
+        sb.append(passport.charAt((size - 2))).append(passport.charAt((size - 1)));
         return sb.toString();
     }
 

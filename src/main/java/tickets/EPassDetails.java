@@ -42,7 +42,6 @@ public class EPassDetails {
         return traveler;
     }
 
-
     private void readFromJSON(String externalDataFilePath) {
         JsonObject travelerJson;
 

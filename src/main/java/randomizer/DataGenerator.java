@@ -1,6 +1,5 @@
 package randomizer;
 
-
 import com.github.javafaker.Faker;
 import com.sun.tools.javac.util.Pair;
 import enums.Kind;
@@ -82,8 +81,7 @@ public class DataGenerator {
     }
 
     public LocalDateTime getActivationDate(LocalDate validityDate) {
-        LocalDate result = validityDate;
-        return result.atTime(generator.nextInt(23), generator.nextInt(60), generator.nextInt(60), generator.nextInt(999) * 1000000);
+        return validityDate.atTime(generator.nextInt(24), generator.nextInt(60), generator.nextInt(60), generator.nextInt(999) * 1000000);
 
     }
 

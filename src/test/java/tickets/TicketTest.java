@@ -1,16 +1,16 @@
 package tickets;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import json.LocalDateAdapter;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TicketTest {
 
     @Test
-    void dosmthTest() {
+    void toString1() {
     }
 
+    @Test
+    void writeToJson() {
+    }
 }
