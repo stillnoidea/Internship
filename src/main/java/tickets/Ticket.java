@@ -29,20 +29,10 @@ public class Ticket {
         this.filePath = filePathResult;
         this.validityState = ValidityState.valueOf(state);
         this.status = Status.valueOf(status);
-//        checkInput();
+        checkInput();
         initializeDates();
         ePassDetails = new EPassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber(), this.status, validityPeriod);
     }
-
-//    public Ticket(String state, String status,  String filePathResult, String name, String surname, String passportNo, String passKind, String passType) {
-//        this.filePath=filePathResult;
-//        this.validityState = ValidityState.valueOf(state);
-//        this.status = Status.valueOf(status);
-//        checkInput();
-//        initializeDates();
-//        ePassDetails = new EPassDetails(passKind, passType, name, surname, passportNo, this.status, validityPeriod);
-//
-//    }
 
     public Ticket(String state, String status, String filePathResult, String filePathTravelerJSON) {
         this.filePath = filePathResult;
@@ -52,6 +42,25 @@ public class Ticket {
         initializeDates();
         ePassDetails = new EPassDetails(filePathTravelerJSON, this.status, validityPeriod);
 
+    }
+
+    public Ticket(String state, String status) {
+        this.validityState = ValidityState.valueOf(state);
+        this.status = Status.valueOf(status);
+        checkInput();
+        initializeDates();
+    }
+
+    public void setePassDetailsJSON(String filePathTravelerJSON) {
+        ePassDetails = new EPassDetails(filePathTravelerJSON, this.status, validityPeriod);
+    }
+
+    public void setePassDetailsRandom() {
+        ePassDetails = new EPassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber(), this.status, validityPeriod);
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     private Gson getGson() {
@@ -102,14 +111,12 @@ public class Ticket {
         }
     }
 
-    @VisibleForTesting
-    protected void initializeValidDates() {
+    private void initializeValidDates() {
         validityPeriod = new ValidityPeriod(random.getValidPeriod());
         setDateValidityPass();
     }
 
-    @VisibleForTesting
-    protected void initializeNotStartedDates() {
+    private void initializeNotStartedDates() {
         Pair<LocalDate, LocalDate> period = random.getNotStartedPeriod();
         if (period != null) {                                                               //status with date
             validityPeriod = new ValidityPeriod(period);
@@ -124,8 +131,7 @@ public class Ticket {
         }
     }
 
-    @VisibleForTesting
-    protected void initializeExpiredDates() {
+    private void initializeExpiredDates() {
         if (!validityState.name().equals("VALID_YESTERDAY")) {
             validityPeriod = new ValidityPeriod(random.getExpiredPeriod());              //expired
             validityDate = random.getNotValidDate(validityPeriod.getPeriod());           // not_valid
@@ -135,8 +141,7 @@ public class Ticket {
         }
     }
 
-    @VisibleForTesting
-    protected void initializeBlockedOrRefundedDates() {
+    private void initializeBlockedOrRefundedDates() {
         Pair<LocalDate, LocalDate> period1 = random.getPeriod();
         if (period1 != null) {
             validityPeriod = new ValidityPeriod(period1);                              //blocked/refunded with date
@@ -162,20 +167,20 @@ public class Ticket {
                 if (validityPeriod.getStartDate().isEqual(random.getValidYesterdayDate())) {
                     validityDate = validityPeriod.getStartDate();
                 } else {
-                    validityDate = random.getDateBetween(new Pair<>(LocalDate.now().plusDays(1), validityPeriod.getEndDate()));
+                    validityDate = random.getDateBetween(new Pair<>(LocalDate.now().plusDays(1), validityPeriod.getEndDate())); //sypie się tu
                 }
                 break;
         }
     }
 
     @VisibleForTesting
-    protected  void checkInput() {
+    protected void checkInput() {
         if (status.name().equals("EXPIRED") && (!(validityState.name().equals("NOT_VALID") || validityState.name().equals("VALID_YESTERDAY")))) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("Given combination of state and status is incorrect");
         } else if (status.name().equals("NOT_STARTED") && (!(validityState.name().equals("NOT_VALID") || validityState.name().equals("NOT_STARTED")))) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("Given combination of state and status is incorrect");
         } else if ((status.name().equals("BLOCKED") || status.name().equals("REFUNDED")) && (!(validityState.name().equals("NOT_VALID")))) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("Given combination of state and status is incorrect");
         }
     }
 
@@ -186,6 +191,5 @@ public class Ticket {
     public ValidityPeriod getValidityPeriod() {
         return validityPeriod;
     }
-
 
 }

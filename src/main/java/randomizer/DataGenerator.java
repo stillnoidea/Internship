@@ -17,7 +17,7 @@ public class DataGenerator {
 
 
     private Pair<LocalDate, LocalDate> getRandomPeriod(Date startDate, Date endDate) {
-        int interval = DataGenerator.generator.nextInt(90)+1;
+        int interval = DataGenerator.generator.nextInt(90) + 1;
         Date date2 = faker.date().between(startDate, endDate);
         LocalDate start = new java.sql.Date(date2.getTime()).toLocalDate();
         LocalDate end = start.plusDays(interval);
@@ -41,7 +41,7 @@ public class DataGenerator {
     }
 
     public Pair<LocalDate, LocalDate> getValidPeriod() {
-        int x = DataGenerator.generator.nextInt(90)+1;
+        int x = DataGenerator.generator.nextInt(90) + 1;
         int y = x - DataGenerator.generator.nextInt(x);
         LocalDate start = (LocalDate.now().minusDays(y));
         LocalDate end = LocalDate.now().plusDays(x - y);
@@ -49,7 +49,7 @@ public class DataGenerator {
     }
 
     public Pair<LocalDate, LocalDate> getValidYesterdayPeriod() {
-        int interval = DataGenerator.generator.nextInt(90)+1;
+        int interval = DataGenerator.generator.nextInt(90) + 1;
         LocalDate end = getValidYesterdayDate();
         LocalDate start = LocalDate.now().minusDays((interval + 1));
         return new Pair<>(start, end);
@@ -66,7 +66,10 @@ public class DataGenerator {
     public LocalDate getDateBetween(Pair<LocalDate, LocalDate> dates) {
         Date fst = java.sql.Date.valueOf(dates.fst);
         Date snd = java.sql.Date.valueOf(dates.snd);
-        return new java.sql.Date(faker.date().between(fst, snd).getTime()).toLocalDate();
+        if (fst.before(snd)) {
+            return new java.sql.Date(faker.date().between(fst, snd).getTime()).toLocalDate();
+        } else return new java.sql.Date(fst.getTime()).toLocalDate();
+
     }
 
     public LocalDate getNotValidDate(Pair<LocalDate, LocalDate> dates) {

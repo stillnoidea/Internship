@@ -50,7 +50,7 @@ class DataGeneratorTest {
     void getValidPeriod() {
         Pair<LocalDate, LocalDate> date = dr.getValidPeriod();
         assertTrue(date.fst.isBefore(date.snd));
-        assertTrue(date.fst.isBefore(LocalDate.now())|| date.fst.isEqual(LocalDate.now()));
+        assertTrue(date.fst.isBefore(LocalDate.now()) || date.fst.isEqual(LocalDate.now()));
         assertTrue(date.snd.isAfter(LocalDate.now()) || date.snd.isEqual(LocalDate.now()));
     }
 
@@ -76,7 +76,7 @@ class DataGeneratorTest {
 
     static Stream<Pair<LocalDate, LocalDate>> setUpValidDate() {
         return Stream.of(dr.getValidYesterdayPeriod(), dr.getExpiredPeriod(), dr.getValidPeriod(), dr.getValidYesterdayPeriod(),
-                dr.getExpiredPeriod(), dr.getValidPeriod(), dr.getValidYesterdayPeriod(), dr.getExpiredPeriod(), dr.getValidPeriod());
+                dr.getExpiredPeriod(), dr.getValidPeriod(), dr.getValidYesterdayPeriod(), dr.getExpiredPeriod(), dr.getValidPeriod(), new Pair<>(LocalDate.now(), LocalDate.now()));
     }
 
     @ParameterizedTest
