@@ -2,25 +2,39 @@ package tickets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.sun.tools.javac.util.Pair;
 import enums.Status;
 import enums.ValidityState;
 import json.LocalDateAdapter;
 import json.LocalDateTimeAdapter;
 import org.assertj.core.util.VisibleForTesting;
+import presistence.SerializeExclusionStrat;
 import randomizer.DataGenerator;
 
+import javax.persistence.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "ticket")
 public class Ticket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Expose(serialize = false)
+    private long id;
+    @Enumerated(EnumType.STRING)
     private ValidityState validityState;
     private LocalDateTime activationDate;
     private LocalDate validityDate;
     private transient Status status;
     private transient ValidityPeriod validityPeriod;
+
+    @ManyToOne
+    @JoinColumn(name = "e_pass_id")
     private EPassDetails ePassDetails;
     private transient DataGenerator random = new DataGenerator();
     private transient String filePath;
@@ -51,6 +65,9 @@ public class Ticket {
         initializeDates();
     }
 
+    public Ticket() {
+    }
+
     public void setePassDetailsJSON(String filePathTravelerJSON) {
         ePassDetails = new EPassDetails(filePathTravelerJSON, this.status, validityPeriod);
     }
@@ -69,6 +86,7 @@ public class Ticket {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .serializeNulls()
+                .setExclusionStrategies(new SerializeExclusionStrat())
                 .create();
     }
 
@@ -121,9 +139,9 @@ public class Ticket {
         if (period != null) {                                                               //status with date
             validityPeriod = new ValidityPeriod(period);
             if (validityState.name().equals("NOT_STARTED")) {                                  //not started must have date
-                validityDate = random.getDateBetween(validityPeriod.getPeriod());
+                validityDate = random.getDateBetween(validityPeriod.obtainPeriod());
             } else {
-                validityDate = random.getNotValidDate(validityPeriod.getPeriod());            //not valid with or without date
+                validityDate = random.getNotValidDate(validityPeriod.obtainPeriod());            //not valid with or without date
             }
         } else {
             validityPeriod = new ValidityPeriod();
@@ -134,7 +152,7 @@ public class Ticket {
     private void initializeExpiredDates() {
         if (!validityState.name().equals("VALID_YESTERDAY")) {
             validityPeriod = new ValidityPeriod(random.getExpiredPeriod());              //expired
-            validityDate = random.getNotValidDate(validityPeriod.getPeriod());           // not_valid
+            validityDate = random.getNotValidDate(validityPeriod.obtainPeriod());           // not_valid
         } else {
             validityPeriod = new ValidityPeriod(random.getValidYesterdayPeriod());      //expired
             validityDate = random.getValidYesterdayDate();                                //val yesterday
@@ -145,7 +163,7 @@ public class Ticket {
         Pair<LocalDate, LocalDate> period1 = random.getPeriod();
         if (period1 != null) {
             validityPeriod = new ValidityPeriod(period1);                              //blocked/refunded with date
-            validityDate = random.getNotValidDate(validityPeriod.getPeriod());      //not valid with or without date
+            validityDate = random.getNotValidDate(validityPeriod.obtainPeriod());      //not valid with or without date
         } else {
             validityPeriod = new ValidityPeriod();
             validityDate = null;
@@ -155,7 +173,7 @@ public class Ticket {
     private void setDateValidityPass() {
         switch (validityState) {
             case NOT_VALID:
-                validityDate = random.getNotValidDate(validityPeriod.getPeriod());
+                validityDate = random.getNotValidDate(validityPeriod.obtainPeriod());
                 break;
             case VALID_TODAY:
                 validityDate = random.getValidTodayDate();
@@ -190,6 +208,11 @@ public class Ticket {
 
     public ValidityPeriod getValidityPeriod() {
         return validityPeriod;
+    }
+
+
+    public EPassDetails getePassDetails() {
+        return ePassDetails;
     }
 
 }

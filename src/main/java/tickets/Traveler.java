@@ -1,13 +1,26 @@
 package tickets;
 
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
 
-class Traveler {
+import javax.persistence.*;
+
+@Entity
+@Table(name = "traveler")
+public class Traveler {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Expose(serialize = false)
+    private long id;
+
     private String fullName;
     private String passportNumber;
     private transient String name;
     private transient String surname;
     private transient String passport;
+
+    public Traveler(){}
 
     Traveler(String name, String surname, String passport) {
         this.name = name;
@@ -28,6 +41,7 @@ class Traveler {
         fullName = getSecretFullName();
         passportNumber = getSecretPassport();
     }
+
 
     private String getSecretFullName() {
         if (name == null) {
@@ -73,4 +87,11 @@ class Traveler {
     }
 
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

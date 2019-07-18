@@ -1,5 +1,9 @@
 plugins {
     id 'java'
+    // java FX
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+// java FX
 }
 
 version '1.0-SNAPSHOT'
@@ -10,12 +14,24 @@ repositories {
     mavenCentral()
 }
 
+javafx {
+    version = "12.0.1"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.base',
+                'javafx.graphics', 'javafx.media', 'javafx.swing', 'javafx.web']
+}
+
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
     testCompile("org.junit.jupiter:junit-jupiter-params:5.5.0")
 
+
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
     implementation 'org.assertj:assertj-core:3.12.2'
     implementation 'com.github.javafaker:javafaker:0.18'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.hibernate:hibernate-core:5.4.3.Final'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.6'
 }
+
+mainClassName = 'Main'

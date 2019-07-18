@@ -2,13 +2,16 @@ package tickets;
 
 import com.sun.tools.javac.util.Pair;
 
+import javax.persistence.Embeddable;
 import java.time.LocalDate;
 
-class ValidityPeriod {
+@Embeddable
+public class ValidityPeriod {
+
     private LocalDate startDate;
     private LocalDate endDate;
 
-    ValidityPeriod() {
+    public ValidityPeriod() {
         startDate = null;
         endDate = null;
     }
@@ -18,16 +21,24 @@ class ValidityPeriod {
         endDate = dates.snd;
     }
 
-    public Pair<LocalDate, LocalDate> getPeriod() {
-        return new Pair<>(startDate, endDate);
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
 
     public LocalDate getEndDate() {
         return endDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Pair<LocalDate, LocalDate> obtainPeriod() {
+        return new Pair<>(startDate, endDate);
     }
 
 }
