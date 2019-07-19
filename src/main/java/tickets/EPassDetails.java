@@ -6,10 +6,7 @@ import com.google.gson.annotations.Expose;
 import enums.Status;
 
 import javax.persistence.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 @Entity
 @Table(name = "epassdetails")
@@ -21,8 +18,8 @@ public class EPassDetails {
     private long id;
     private String kind;
     private String type;
-    @OneToOne
-    @JoinColumn(name="traveler_id", unique = true)
+    @OneToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "traveler_id", unique = true)
     private Traveler traveler;
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -37,7 +34,7 @@ public class EPassDetails {
         this.validityPeriod = validityPeriod;
     }
 
-    EPassDetails(String filepath, Status status, ValidityPeriod validityPeriod) {
+    EPassDetails(String filepath, Status status, ValidityPeriod validityPeriod) throws FileNotFoundException {
         readFromJSON(filepath);
         this.status = status;
         this.validityPeriod = validityPeriod;
@@ -58,21 +55,18 @@ public class EPassDetails {
         return traveler;
     }
 
-    private void readFromJSON(String externalDataFilePath) {
+    private void readFromJSON(String externalDataFilePath) throws FileNotFoundException {
         JsonObject travelerJson;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(externalDataFilePath)))) {
+        BufferedReader reader = new BufferedReader(new FileReader(new File(externalDataFilePath)));
 
-            Gson gson = new Gson();
-            travelerJson = gson.fromJson(reader, JsonObject.class);
+        Gson gson = new Gson();
+        travelerJson = gson.fromJson(reader, JsonObject.class);
 
-            this.kind = travelerJson.get("passKind").getAsString();
-            this.type = travelerJson.get("passType").getAsString();
+        this.kind = travelerJson.get("passKind").getAsString();
+        this.type = travelerJson.get("passType").getAsString();
 
-            this.traveler = new Traveler(travelerJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.traveler = new Traveler(travelerJson);
     }
 
     public long getId() {

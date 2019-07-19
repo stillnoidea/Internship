@@ -2,11 +2,14 @@ package json;
 
 import enums.Status;
 import enums.ValidityState;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import presistence.HibernateUtil;
 import tickets.Ticket;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Utils {
@@ -14,10 +17,22 @@ public class Utils {
     private String state;
     private String status;
     private String resultPath;
-    private String dataPath;
     private Scanner scan = new Scanner(System.in);
     private Ticket ticket;
-    private String command;
+
+    private void runTerminal() {
+        System.out.println("Hello, enter command, depending on whether you want to generate new ticket or load one from" +
+                " database : (GENERATE/LOAD)");
+
+        String command = scan.nextLine();
+        if (command.equals("GENERATE")) {
+            generateTicket();
+        } else if (command.equals("LOAD")) {
+            loadTicket();
+        } else {
+            runTerminal();
+        }
+    }
 
     private void getState() {
         System.out.println("Enter expected ticket state");
@@ -56,41 +71,34 @@ public class Utils {
         generateTicket();
     }
 
-    private void getTicketId(){
-        //TODO soutprint ticket id after settings paths and before saving it to json and so on
-    }
-
-    private void getPaths() {
-        System.out.println("Enter filepath for result json file");
+    private void setResultPath() {
+        System.out.println("Enter filepath for result json file: ");
         resultPath = scan.nextLine();
-        System.out.println("Do you want enter filepath to json file with traveler data? (enter no or filepath");
-        dataPath = scan.nextLine();
-        ticket.setFilePath(resultPath);
-        if (dataPath.length() > 8) {
-            ticket.setePassDetailsJSON(dataPath);
-        } else {
-            ticket.setePassDetailsRandom();
+        if (!resultPath.contains(".json")) {
+            resultPath += ".json";
+        }
+        try {
+            ticket.setFilePath(resultPath);
+        } catch (IOException e) {
+            System.out.println("Invalid output file path");
+            e.printStackTrace();
+            setResultPath();
         }
     }
 
-    private void addToDatabase() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction transaction = session.getTransaction();
+    private void setDataPath() {
+        System.out.println("Do you want enter filepath to json file with traveler data? (enter NO or wanted filepath)");
+        String dataPath = scan.nextLine();
 
-        try {
-            transaction.begin();
-            session.save(ticket.getePassDetails().getTraveler());
-            session.save(ticket.getePassDetails());
-            session.save(ticket);
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null)
-                transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            if (session != null)
-                session.close();
+        if (dataPath.length() > 8) {
+            try {
+                ticket.setePassDetailsJSON(dataPath);
+            } catch (FileNotFoundException e) {
+                System.out.println("Invalid traveler data path");
+                setDataPath();
+            }
+        } else {
+            ticket.setePassDetailsRandom();
         }
     }
 
@@ -106,65 +114,110 @@ public class Utils {
                 getTicket();
                 break;
             case 3:
-                getPaths();
-                afterLoad();
+                setResultPath();
+                setDataPath();
+                saveTicketTo();
+                break;
+        }
+        endOrAgain();
+    }
+
+    private void saveTicketTo() {
+        System.out.println("Do you want to save ticket to json or/and to print it on console? (JSON | CONSOLE | DATABASE | ALL )");
+        String save = scan.nextLine();
+        switch (save) {
+            case "JSON":
+                ticket.writeToJson();
+                System.out.println("Ticket is in: " + resultPath);
+                break;
+            case "CONSOLE":
+                System.out.println(ticket);
+                break;
+            case "DATABASE":
+                addToDatabase();
+                break;
+            case "ALL":
+                ticket.writeToJson();
+                System.out.println("Ticket is in: " + resultPath);
+                System.out.println(ticket);
                 addToDatabase();
                 break;
         }
         endOrAgain();
     }
 
+    private void addToDatabase() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit");
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        try {
+            entityTransaction.begin();
+            entityManager.persist(ticket);
+            entityTransaction.commit();
+        } catch (Exception e) {
+            if (entityTransaction != null) entityTransaction.rollback();
+            e.printStackTrace();
+        } finally {
+            if (entityManager != null) entityManager.close();
+        }
+        System.out.println("Ticket id: " + ticket.getId());
+    }
+
     private void loadTicket() {
         System.out.println("Enter ticket id");
         Long id = scan.nextLong();
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction transaction = session.getTransaction();
-
+        scan.nextLine();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit");
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
-            transaction.begin();
-            ticket = session.load(Ticket.class, id);
-            System.out.println(ticket);
+            entityTransaction.begin();
+            ticket = entityManager.find(Ticket.class, id);
+            entityTransaction.commit();
         } catch (Exception e) {
-            if (transaction != null)
-                transaction.rollback();
+            if (entityTransaction != null) entityTransaction.rollback();
             e.printStackTrace();
         } finally {
-            if (session != null)
-                session.close();
+            if (entityManager != null) entityManager.close();
         }
-        afterLoad();
+        saveTicketFromDatabase();
     }
 
-    private void afterLoad() {
-        System.out.println("Do you want to save ticket to json or/and to print it on console? (JSON | CONSOLE | BOTH");
+    private void saveTicketFromDatabase() {
+        System.out.println("Do you want to save ticket to json or/and to print it on console? (JSON | CONSOLE | BOTH )");
         String save = scan.nextLine();
         switch (save) {
             case "JSON":
+                setResultPath();
                 ticket.writeToJson();
+                if (resultPath.contains("C:\\")) {
+                    System.out.println("Ticket is in: " + resultPath);
+                } else {
+                    System.out.println("File is in main program package");
+                }
+                break;
             case "CONSOLE":
                 System.out.println(ticket);
+                break;
             case "BOTH":
+                setResultPath();
                 ticket.writeToJson();
+                System.out.println("Ticket is in: " + resultPath);
                 System.out.println(ticket);
+                break;
         }
         endOrAgain();
     }
 
-    private void runTerminal() {
-        System.out.println("Hello, Enter command: (GENERATE/LOAD");
-        command = scan.nextLine();
-        if (command.equals("GENERATE")) {
-            generateTicket();
-        } else if (command.equals("LOAD")) {
-            loadTicket();
-        }
-    }
-
     private void endOrAgain() {
-        System.out.println("Do you want make something else or end? (END | DO");
+        System.out.println("Do you want make something else or end? (END | DO)");
         String command = scan.nextLine();
         if (command.equals("DO")) {
+            ticket = null;
+            number = 0;
             runTerminal();
+        } else {
+            System.exit(0);
         }
     }
 

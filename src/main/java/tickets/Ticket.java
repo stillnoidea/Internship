@@ -13,6 +13,7 @@ import presistence.SerializeExclusionStrat;
 import randomizer.DataGenerator;
 
 import javax.persistence.*;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -32,8 +33,9 @@ public class Ticket {
     private LocalDate validityDate;
     private transient Status status;
     private transient ValidityPeriod validityPeriod;
+    private transient FileWriter fileWriter;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "e_pass_id")
     private EPassDetails ePassDetails;
     private transient DataGenerator random = new DataGenerator();
@@ -48,15 +50,15 @@ public class Ticket {
         ePassDetails = new EPassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber(), this.status, validityPeriod);
     }
 
-    public Ticket(String state, String status, String filePathResult, String filePathTravelerJSON) {
-        this.filePath = filePathResult;
-        this.validityState = ValidityState.valueOf(state);
-        this.status = Status.valueOf(status);
-        checkInput();
-        initializeDates();
-        ePassDetails = new EPassDetails(filePathTravelerJSON, this.status, validityPeriod);
-
-    }
+//    public Ticket(String state, String status, String filePathResult, String filePathTravelerJSON) {
+//        this.filePath = filePathResult;
+//        this.validityState = ValidityState.valueOf(state);
+//        this.status = Status.valueOf(status);
+//        checkInput();
+//        initializeDates();
+//        ePassDetails = new EPassDetails(filePathTravelerJSON, this.status, validityPeriod);
+//
+//    }
 
     public Ticket(String state, String status) {
         this.validityState = ValidityState.valueOf(state);
@@ -68,7 +70,7 @@ public class Ticket {
     public Ticket() {
     }
 
-    public void setePassDetailsJSON(String filePathTravelerJSON) {
+    public void setePassDetailsJSON(String filePathTravelerJSON) throws FileNotFoundException {
         ePassDetails = new EPassDetails(filePathTravelerJSON, this.status, validityPeriod);
     }
 
@@ -76,8 +78,9 @@ public class Ticket {
         ePassDetails = new EPassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber(), this.status, validityPeriod);
     }
 
-    public void setFilePath(String filePath) {
+    public void setFilePath(String filePath) throws IOException {
         this.filePath = filePath;
+        fileWriter = new FileWriter(filePath);
     }
 
     private Gson getGson() {
@@ -96,7 +99,6 @@ public class Ticket {
 
     public void writeToJson() {
         try {
-            FileWriter fileWriter = new FileWriter(filePath);
             getGson().toJson(this, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
@@ -210,9 +212,14 @@ public class Ticket {
         return validityPeriod;
     }
 
+    public long getId() {
+        return id;
+    }
 
     public EPassDetails getePassDetails() {
         return ePassDetails;
     }
+
+
 
 }
