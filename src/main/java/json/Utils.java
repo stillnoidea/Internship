@@ -20,7 +20,7 @@ public class Utils {
     private Scanner scan = new Scanner(System.in);
     private Ticket ticket;
 
-    private void runTerminal() {
+    public void runTerminal() {
         System.out.println("Hello, enter command, depending on whether you want to generate new ticket or load one from" +
                 " database : (GENERATE/LOAD)");
 
@@ -221,9 +221,6 @@ public class Utils {
         }
     }
 
-    public static void main(String[] args) {
-        new Utils().runTerminal();
-    }
 }
 
 
