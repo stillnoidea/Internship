@@ -1,9 +1,9 @@
 package randomizer;
 
 import com.github.javafaker.Faker;
-import com.sun.tools.javac.util.Pair;
 import enums.Kind;
 import enums.PassType;
+import javafx.util.Pair;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -64,8 +64,8 @@ public class DataGenerator {
     }
 
     public LocalDate getDateBetween(Pair<LocalDate, LocalDate> dates) {
-        Date fst = java.sql.Date.valueOf(dates.fst);
-        Date snd = java.sql.Date.valueOf(dates.snd);
+        Date fst = java.sql.Date.valueOf(dates.getKey());
+        Date snd = java.sql.Date.valueOf(dates.getValue());
         if (fst.before(snd)) {
             return new java.sql.Date(faker.date().between(fst, snd).getTime()).toLocalDate();
         } else return new java.sql.Date(fst.getTime()).toLocalDate();

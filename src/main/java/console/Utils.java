@@ -1,4 +1,4 @@
-package json;
+package console;
 
 import enums.Status;
 import enums.ValidityState;

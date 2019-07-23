@@ -1,6 +1,7 @@
 package randomizer;
 
-import com.sun.tools.javac.util.Pair;
+
+import javafx.util.Pair;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,8 +24,8 @@ class DataGeneratorTest {
     @RepeatedTest(10)
     void getExpiredPeriod() {
         Pair<LocalDate, LocalDate> date = dr.getExpiredPeriod();
-        assertTrue(date.fst.isBefore(date.snd));
-        assertTrue(date.snd.isBefore(LocalDate.now()));
+        assertTrue(date.getKey().isBefore(date.getValue()));
+        assertTrue(date.getValue().isBefore(LocalDate.now()));
     }
 
     @RepeatedTest(10)
@@ -32,8 +33,8 @@ class DataGeneratorTest {
         Pair<LocalDate, LocalDate> date = dr.getNotStartedPeriod();
         boolean isNull = (date == null);
         if (!isNull) {
-            assertTrue(date.fst.isBefore(date.snd));
-            assertTrue(date.fst.isAfter(LocalDate.now()));
+            assertTrue(date.getKey().isBefore(date.getValue()));
+            assertTrue(date.getKey().isAfter(LocalDate.now()));
         }
     }
 
@@ -42,24 +43,24 @@ class DataGeneratorTest {
         Pair<LocalDate, LocalDate> date = dr.getPeriod();
         boolean isNull = (date == null);
         if (!isNull) {
-            assertTrue(date.fst.isBefore(date.snd));
+            assertTrue(date.getKey().isBefore(date.getValue()));
         }
     }
 
     @RepeatedTest(10)
     void getValidPeriod() {
         Pair<LocalDate, LocalDate> date = dr.getValidPeriod();
-        assertTrue(date.fst.isBefore(date.snd));
-        assertTrue(date.fst.isBefore(LocalDate.now()) || date.fst.isEqual(LocalDate.now()));
-        assertTrue(date.snd.isAfter(LocalDate.now()) || date.snd.isEqual(LocalDate.now()));
+        assertTrue(date.getKey().isBefore(date.getValue()));
+        assertTrue(date.getKey().isBefore(LocalDate.now()) || date.getKey().isEqual(LocalDate.now()));
+        assertTrue(date.getValue().isAfter(LocalDate.now()) || date.getValue().isEqual(LocalDate.now()));
     }
 
     @RepeatedTest(10)
     void getValidYesterdayPeriod() {
         Pair<LocalDate, LocalDate> date = dr.getValidYesterdayPeriod();
-        assertTrue(date.fst.isBefore(date.snd));
-        assertTrue(date.fst.isBefore(LocalDate.now()));
-        assertEquals(date.snd, LocalDate.now().minusDays(1));
+        assertTrue(date.getKey().isBefore(date.getValue()));
+        assertTrue(date.getKey().isBefore(LocalDate.now()));
+        assertEquals(date.getValue(), LocalDate.now().minusDays(1));
     }
 
     @Test
@@ -83,8 +84,8 @@ class DataGeneratorTest {
     @MethodSource("setUpValidDate")
     void getDateBetween(Pair<LocalDate, LocalDate> period) {
         LocalDate date = dr.getDateBetween(period);
-        assertTrue(date.isAfter(period.fst) || date.isEqual(period.fst));
-        assertTrue(date.isBefore(period.snd) || date.isEqual(period.snd));
+        assertTrue(date.isAfter(period.getKey()) || date.isEqual(period.getKey()));
+        assertTrue(date.isBefore(period.getValue()) || date.isEqual(period.getValue()));
     }
 
 
@@ -93,8 +94,8 @@ class DataGeneratorTest {
     void getNotValidDate(Pair<LocalDate, LocalDate> period) {
         LocalDate date = dr.getNotValidDate(period);
         if (date != null) {
-            assertTrue(date.isAfter(period.fst) || date.isEqual(period.fst));
-            assertTrue(date.isBefore(period.snd) || date.isEqual(period.snd));
+            assertTrue(date.isAfter(period.getKey()) || date.isEqual(period.getKey()));
+            assertTrue(date.isBefore(period.getValue()) || date.isEqual(period.getValue()));
         }
     }
 

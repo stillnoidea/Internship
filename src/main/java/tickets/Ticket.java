@@ -1,15 +1,10 @@
 package tickets;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-import com.sun.tools.javac.util.Pair;
 import enums.Status;
 import enums.ValidityState;
-import json.LocalDateAdapter;
-import json.LocalDateTimeAdapter;
+import javafx.util.Pair;
 import org.assertj.core.util.VisibleForTesting;
-import presistence.SerializeExclusionStrat;
 import randomizer.DataGenerator;
 
 import javax.persistence.*;
@@ -83,27 +78,58 @@ public class Ticket {
         fileWriter = new FileWriter(filePath);
     }
 
-    private Gson getGson() {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .serializeNulls()
-                .setExclusionStrategies(new SerializeExclusionStrat())
-                .create();
-    }
-
     public String toString() {
-        return getGson().toJson(this);
+        String connector = ": ";
+        String endLine = ",\n";
+        String newObject = "{\n";
+        String endObject = "}";
+        String newLine = "\n";
+        StringBuilder re = new StringBuilder();
+        re.append(newObject).append(
+                "  \"validityState\"").append(connector).append(quote(this.validityState)).append(endLine).append(
+                "  \"activationDate\"").append(connector).append(quote(this.activationDate)).append(endLine).append(
+                "  \"validityDate\"").append(connector).append(quote(this.validityDate)).append(endLine).append(
+                "  \"epassDetails\"").append(connector).append(newObject).append(
+                "    \"kind\"").append(connector).append(quote(this.ePassDetails.getKind())).append(endLine).append(
+                "    \"type\"").append(connector).append(quote(this.ePassDetails.getType())).append(endLine).append(
+                "    \"traveler\"").append(connector).append(newObject).append(
+                "      \"fullName\"").append(connector).append(quote(this.ePassDetails.getTraveler().getSecuredFullName())).append(endLine).append(
+                "      \"passportNumber\"").append(connector).append(quote(this.ePassDetails.getTraveler().getSecuredPassport())).append(newLine).append(
+                "    ").append(endObject).append(endLine).append(
+                "    \"status\"").append(connector).append(quote(this.status)).append(endLine).append(
+                "    \"validityPeriod\"").append(connector).append(newObject).append(
+                "      \"startDate\"").append(connector);
+
+        if (this.validityPeriod == null) {
+            re.append(quote(null)).append(endLine).append(
+                    "      \"endDate\"").append(connector).append(quote(null));
+        } else {
+            re.append(quote(this.validityPeriod.getStartDate())).append(endLine).append(
+                    "      \"endDate\"").append(connector).append(quote(this.validityPeriod.getEndDate()));
+        }
+        re.append(newLine).append(
+                "    ").append(endObject).append(newLine).append(
+                "  ").append(endObject).append(newLine).append(
+                endObject);
+        return re.toString();
     }
 
     public void writeToJson() {
         try {
-            getGson().toJson(this, fileWriter);
-            fileWriter.close();
+            FileWriter fw = new FileWriter(filePath);
+            fw.write(this.toString());
+            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    private String quote(Object o) {
+        if (o == null) {
+            return "\"null\"";
+        }
+        return "\"" + o.toString() + "\"";
     }
 
     private void initializeDates() {
@@ -219,7 +245,6 @@ public class Ticket {
     public EPassDetails getePassDetails() {
         return ePassDetails;
     }
-
 
 
 }

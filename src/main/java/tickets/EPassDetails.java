@@ -7,6 +7,7 @@ import enums.Status;
 
 import javax.persistence.*;
 import java.io.*;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "epassdetails")
@@ -43,30 +44,43 @@ public class EPassDetails {
     public EPassDetails() {
     }
 
-    public String getKind() {
+    String getKind() {
         return kind;
     }
 
-    public String getType() {
+    String getType() {
         return type;
     }
 
-    public Traveler getTraveler() {
+    Traveler getTraveler() {
         return traveler;
     }
 
     private void readFromJSON(String externalDataFilePath) throws FileNotFoundException {
-        JsonObject travelerJson;
-
         BufferedReader reader = new BufferedReader(new FileReader(new File(externalDataFilePath)));
 
-        Gson gson = new Gson();
-        travelerJson = gson.fromJson(reader, JsonObject.class);
+        Stream<String> ss = reader.lines();
 
-        this.kind = travelerJson.get("passKind").getAsString();
-        this.type = travelerJson.get("passType").getAsString();
-
-        this.traveler = new Traveler(travelerJson);
+        Object[] list = ss.toArray();
+        String[] l = list[1].toString().split("\"");
+        String[] l1 = list[2].toString().split("\"");
+        String[] l2 = list[3].toString().split("\"");
+        this.traveler = new Traveler(l[3], l1[3], l2[3]);
+        String[] l3 = list[4].toString().split("\"");
+        this.kind = l3[3];
+        String[] l4 = list[5].toString().split("\"");
+        this.type = l4[3];
+//        JsonObject travelerJson;
+//
+//        BufferedReader reader = new BufferedReader(new FileReader(new File(externalDataFilePath)));
+//
+//        Gson gson = new Gson();
+//        travelerJson = gson.fromJson(reader, JsonObject.class);
+//
+//        this.kind = travelerJson.get("passKind").getAsString();
+//        this.type = travelerJson.get("passType").getAsString();
+//
+//        this.traveler = new Traveler(travelerJson);
     }
 
     public long getId() {
