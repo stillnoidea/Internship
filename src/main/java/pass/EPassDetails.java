@@ -1,7 +1,5 @@
-package tickets;
+package pass;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import enums.Status;
 
@@ -27,7 +25,7 @@ public class EPassDetails {
     @Embedded
     private ValidityPeriod validityPeriod;
 
-    EPassDetails(String kind, String passType, String name, String surname, String passportNo, Status status, ValidityPeriod validityPeriod) {
+    public EPassDetails(String kind, String passType, String name, String surname, String passportNo, Status status, ValidityPeriod validityPeriod) {
         traveler = new Traveler(name, surname, passportNo);
         this.kind = kind;
         this.type = passType;
@@ -35,7 +33,7 @@ public class EPassDetails {
         this.validityPeriod = validityPeriod;
     }
 
-    EPassDetails(String filepath, Status status, ValidityPeriod validityPeriod) throws FileNotFoundException {
+    public EPassDetails(String filepath, Status status, ValidityPeriod validityPeriod) throws FileNotFoundException {
         readFromJSON(filepath);
         this.status = status;
         this.validityPeriod = validityPeriod;
@@ -44,15 +42,15 @@ public class EPassDetails {
     public EPassDetails() {
     }
 
-    String getKind() {
+    public String getKind() {
         return kind;
     }
 
-    String getType() {
+    public String getType() {
         return type;
     }
 
-    Traveler getTraveler() {
+    public Traveler getTraveler() {
         return traveler;
     }
 

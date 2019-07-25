@@ -2,7 +2,7 @@ package console;
 
 import enums.Status;
 import enums.ValidityState;
-import tickets.Ticket;
+import pass.ticket.Ticket;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -78,7 +78,7 @@ public class Utils {
             resultPath += ".json";
         }
         try {
-            ticket.setFilePath(resultPath);
+            ticket.setOutputFilePath(resultPath);
         } catch (IOException e) {
             System.out.println("Invalid output file path");
             e.printStackTrace();
@@ -92,13 +92,13 @@ public class Utils {
 
         if (dataPath.length() > 8) {
             try {
-                ticket.setePassDetailsJSON(dataPath);
+                ticket.setEPassDetailsFromJSON(dataPath);
             } catch (FileNotFoundException e) {
                 System.out.println("Invalid traveler data path");
                 setDataPath();
             }
         } else {
-            ticket.setePassDetailsRandom();
+            ticket.setEPassDetailsRandomly();
         }
     }
 

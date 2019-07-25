@@ -1,8 +1,9 @@
-package tickets;
+package pass;
 
 import javafx.util.Pair;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.time.LocalDate;
 
 @Embeddable
@@ -16,7 +17,7 @@ public class ValidityPeriod {
         endDate = null;
     }
 
-    ValidityPeriod(Pair<LocalDate, LocalDate> dates) {
+    public ValidityPeriod(Pair<LocalDate, LocalDate> dates) {
         startDate = dates.getKey();
         endDate = dates.getValue();
     }
@@ -37,7 +38,8 @@ public class ValidityPeriod {
         this.endDate = endDate;
     }
 
-    Pair<LocalDate, LocalDate> obtainPeriod() {
+    @Transient
+    public Pair<LocalDate, LocalDate> getPeriod() {
         return new Pair<>(startDate, endDate);
     }
 

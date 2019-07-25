@@ -5,9 +5,9 @@
     <persistence-unit name="my-persistence-unit" transaction-type="RESOURCE_LOCAL">
 <!--        <description>JpaForBeginners</description>-->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>tickets.Ticket</class>
-        <class>tickets.Traveler</class>
-        <class>tickets.EPassDetails</class>
+        <class>pass.ticket.Ticket</class>
+        <class>pass.Traveler</class>
+        <class>pass.EPassDetails</class>
 <!--        <exclude-unlisted-classes>true</exclude-unlisted-classes>-->
 
         <properties>

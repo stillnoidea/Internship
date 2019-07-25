@@ -1,6 +1,5 @@
-package tickets;
+package pass;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -39,7 +38,7 @@ class TravelerTest {
     @ParameterizedTest
     @MethodSource("setUpTravelers")
     void getSecretPassport(Traveler traveler) {
-        if (traveler.getPassport() != null) {
+        if (traveler.getPassportNo() != null) {
             String passport = traveler.getSecuredPassport();
             System.out.println(passport);
             assertEquals(8, passport.length());

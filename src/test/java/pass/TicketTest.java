@@ -1,8 +1,9 @@
-package tickets;
+package pass;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import pass.ticket.Ticket;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
@@ -96,7 +97,7 @@ class TicketTest {
     @ParameterizedTest
     @MethodSource("setUpTickets")
     void checkInputTest(Ticket ticket) {
-        assertDoesNotThrow(ticket::checkInput);
+        assertDoesNotThrow(ticket::isStatusAndStateCorrect);
     }
 
     @Test
