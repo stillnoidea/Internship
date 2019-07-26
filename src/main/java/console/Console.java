@@ -34,15 +34,23 @@ public class Console {
         this.args = args;
         String command = args[0];
         if (command.equals("LOAD")) {
-            load();
+            loadCommand();
         } else {
-            generate();
+            generateCommand();
         }
     }
 
-    private void load() {
-        loadTicket(Long.parseLong(args[1]));
-        whereSaveTicketFromDatabase();
+    private void loadCommand() {
+        tryToLoadFromDatabase();
+        processTicketFromDatabase();
+    }
+
+    private void tryToLoadFromDatabase() {
+        try {
+            loadTicket(Long.parseLong(args[1]));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid ticket id");
+        }
     }
 
     private void loadTicket(Long id) {
@@ -68,6 +76,18 @@ public class Console {
         entity.getValue().begin();
         ticket = entity.getKey().find(Ticket.class, id);
         entity.getValue().commit();
+    }
+
+    private void processTicketFromDatabase() {
+        if (isTicketInDatabase()) {
+            whereSaveTicketFromDatabase();
+        } else {
+            System.out.println("Invalid ticket id");
+        }
+    }
+
+    private boolean isTicketInDatabase() {
+        return ticket != null;
     }
 
     private void whereSaveTicketFromDatabase() {
@@ -97,7 +117,7 @@ public class Console {
         System.out.println(ticket.toString());
     }
 
-    private void generate() {
+    private void generateCommand() {
         if (args.length == 4 || args.length == 5) {
             if (isDataTicketValid()) {
                 initializeTicket();
