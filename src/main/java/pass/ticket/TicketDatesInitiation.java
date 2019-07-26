@@ -4,12 +4,10 @@ import enums.Status;
 import enums.ValidityState;
 import javafx.util.Pair;
 import pass.ValidityPeriod;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 class TicketDatesInitiation {
-
     private transient Status status;
     private ValidityState validityState;
     private transient ValidityPeriod validityPeriod;

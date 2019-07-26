@@ -22,7 +22,7 @@ public class TicketJsonWriter {
 
     }
 
-    public static String quote(Object o) {
+    static String quote(Object o) {
         if (o == null) {
             return "\"null\"";
         }

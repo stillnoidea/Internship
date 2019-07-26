@@ -17,6 +17,7 @@ import java.util.Scanner;
 public class Console {
     private Ticket ticket;
     private String[] args;
+    private Scanner scanner = new Scanner(System.in);
 
     public void runTerminal() {
         getCommand();
@@ -25,7 +26,6 @@ public class Console {
 
     private void getCommand() {
         System.out.println("Enter command:");
-        Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
         args = command.split(" ");
     }
@@ -64,7 +64,7 @@ public class Console {
         return new Pair<>(entityManager, entityTransaction);
     }
 
-    private void getTicketFromDatabase(Pair<EntityManager, EntityTransaction> entity, long id) throws Exception {
+    private void getTicketFromDatabase(Pair<EntityManager, EntityTransaction> entity, long id) {
         entity.getValue().begin();
         ticket = entity.getKey().find(Ticket.class, id);
         entity.getValue().commit();
@@ -73,6 +73,7 @@ public class Console {
     private void whereSaveTicketFromDatabase() {
         if (args.length > 2) {
             saveTicketToJson(args[2]);
+            printFilePath(args[2]);
         } else {
             printTicketOnConsole();
         }
@@ -88,39 +89,46 @@ public class Console {
         }
     }
 
+    private void printFilePath(String path) {
+        System.out.println(path);
+    }
+
     private void printTicketOnConsole() {
         System.out.println(ticket.toString());
     }
 
     private void generate() {
         if (args.length == 4 || args.length == 5) {
-            generateTicket();
-            whereSaveTicketGenerated(args[3]);
+            if (isDataTicketValid()) {
+                initializeTicket();
+                whereSaveTicketGenerated(args[3]);
+            }
         } else System.out.println("Invalid command");
     }
 
-    private void generateTicket() {
-        checkState(args[2]);
-        checkStatus(args[3]);
-        generateTicket(args[2], args[3]);
+    private boolean isDataTicketValid() {
+        try {
+            checkState(args[1]);
+            checkStatus(args[2]);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid state or status value");
+            return false;
+        }
+        return true;
+    }
+
+    private void checkState(String state) throws IllegalArgumentException {
+        ValidityState.valueOf(state);
+    }
+
+    private void checkStatus(String status) throws IllegalArgumentException {
+        Status.valueOf(status);
+    }
+
+    private void initializeTicket() {
+        generateTicket(args[1], args[2]);
         if (args.length == 5) {
             setTravelerData();
-        }
-    }
-
-    private void checkState(String state) {
-        try {
-            ValidityState.valueOf(state);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid state");
-        }
-    }
-
-    private void checkStatus(String status) {
-        try {
-            Status.valueOf(status);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid status, try again");
         }
     }
 
@@ -140,6 +148,15 @@ public class Console {
             result = false;
         }
         return result;
+    }
+
+    private void setTravelerData() {
+        try {
+            ticket.setEPassDetailsFromJSON(args[4]);
+        } catch (FileNotFoundException e) {
+            System.out.println("File with traveler data not found");
+            e.printStackTrace();
+        }
     }
 
     private void whereSaveTicketGenerated(String command) {
@@ -175,13 +192,14 @@ public class Console {
         System.out.println("Ticket id: " + ticket.getId());
     }
 
-
-    private void setTravelerData() {
-        try {
-            ticket.setEPassDetailsFromJSON(args[4]);
-        } catch (FileNotFoundException e) {
-            System.out.println("File with traveler data not found");
-            e.printStackTrace();
-        }
+    public void endOrContinue() {
+        String command;
+        do {
+            System.out.println("Enter EXIT to end program or next command");
+            command = scanner.nextLine();
+            if (!command.equals("EXIT")) {
+                loadOrGenerate(command.split(" "));
+            }
+        } while (!command.equals("EXIT"));
     }
 }

@@ -2,14 +2,13 @@ package pass.ticket;
 
 import enums.Status;
 import enums.ValidityState;
-import randomizer.DataGenerator;
 import pass.EPassDetails;
-import pass.ValidityPeriod;
+import randomizer.DataGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class DataInitializer {
+class DataInitializer {
     private TicketDatesInitiation datesInitializer;
     static DataGenerator random = new DataGenerator();
     private transient Status status;
@@ -19,13 +18,8 @@ public class DataInitializer {
         this.status = status;
     }
 
-
-    public EPassDetails getRandomEPassDetails() {
+    EPassDetails getRandomEPassDetails() {
         return new EPassDetails(random.getValidityKind(), random.getValidityPassType(), random.getName(), random.getSurname(), random.getPassportNumber(), this.status, datesInitializer.getValidityPeriod());
-    }
-
-    ValidityPeriod getValidityPeriod() {
-        return datesInitializer.getValidityPeriod();
     }
 
     LocalDateTime getActivationDate() {

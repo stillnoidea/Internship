@@ -2,9 +2,11 @@ package pass;
 
 import com.google.gson.annotations.Expose;
 import enums.Status;
-
 import javax.persistence.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.stream.Stream;
 
 @Entity
@@ -33,12 +35,6 @@ public class EPassDetails {
         this.validityPeriod = validityPeriod;
     }
 
-    public EPassDetails(String filepath, Status status, ValidityPeriod validityPeriod) throws FileNotFoundException {
-        readFromJSON(filepath);
-        this.status = status;
-        this.validityPeriod = validityPeriod;
-    }
-
     public EPassDetails() {
     }
 
@@ -52,6 +48,18 @@ public class EPassDetails {
 
     public Traveler getTraveler() {
         return traveler;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public ValidityPeriod getValidityPeriod() {
+        return validityPeriod;
+    }
+
+    public void setTravelerDataFromJson(String filepath) throws FileNotFoundException {
+        readFromJSON(filepath);
     }
 
     private void readFromJSON(String externalDataFilePath) throws FileNotFoundException {
@@ -68,17 +76,6 @@ public class EPassDetails {
         this.kind = l3[3];
         String[] l4 = list[5].toString().split("\"");
         this.type = l4[3];
-//        JsonObject travelerJson;
-//
-//        BufferedReader reader = new BufferedReader(new FileReader(new File(externalDataFilePath)));
-//
-//        Gson gson = new Gson();
-//        travelerJson = gson.fromJson(reader, JsonObject.class);
-//
-//        this.kind = travelerJson.get("passKind").getAsString();
-//        this.type = travelerJson.get("passType").getAsString();
-//
-//        this.traveler = new Traveler(travelerJson);
     }
 
     public long getId() {

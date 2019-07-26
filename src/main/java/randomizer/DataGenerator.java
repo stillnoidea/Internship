@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import enums.Kind;
 import enums.PassType;
 import javafx.util.Pair;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;

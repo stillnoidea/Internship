@@ -1,7 +1,6 @@
 package pass;
 
 import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 
 @Entity
@@ -13,8 +12,8 @@ public class Traveler {
     @Expose(serialize = false)
     private long id;
 
-    private String SecretFullName;
-    private String SecretPassportNo;
+    private String fullName;
+    private String passportNumber;
     private transient String name;
     private transient String surname;
     private transient String passportNo;
@@ -30,24 +29,13 @@ public class Traveler {
         setSecretFullName();
     }
 
-//    Traveler(JsonObject traveler) {
-//        this.name = traveler.get("travelerName").getAsString();
-//        this.surname = traveler.get("travelerSurname").getAsString();
-//        this.passportNo = traveler.get("SecretPassportNo").getAsString();
-//        SecretFullName = encryptFullName();
-//        SecretPassportNo = encryptPassportNo();
-//    }
-
     private void setSecretFullName() {
         if (!name.equals("") && !surname.equals("")) {
-            SecretFullName = encryptFullName();
-        } else this.name = this.surname = SecretFullName = null;
+            fullName = encryptFullName();
+        } else this.name = this.surname = fullName = null;
     }
 
     private String encryptFullName() {
-//        if (name == null) {
-//            return null;
-//        }
         int size = surname.length();
         StringBuilder sb = new StringBuilder();
         sb.append(name.charAt(0)).append(". ").append(surname.charAt(0));
@@ -60,14 +48,11 @@ public class Traveler {
 
     private void setSecretPassportNo() {
         if (!passportNo.equals("")) {
-            SecretPassportNo = encryptPassportNo();
-        } else this.passportNo = SecretPassportNo = null;
+            passportNumber = encryptPassportNo();
+        } else this.passportNo = passportNumber = null;
     }
 
     private String encryptPassportNo() {
-//        if (passportNo == null) {
-//            return null;
-//        }
         StringBuilder sb = new StringBuilder();
         int size = passportNo.length();
         for (int i = 0; i < 6; i++) {
@@ -86,18 +71,14 @@ public class Traveler {
     }
 
     public String getSecuredFullName() {
-        return SecretFullName;
+        return fullName;
     }
 
     public String getSecuredPassport() {
-        return SecretPassportNo;
+        return passportNumber;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

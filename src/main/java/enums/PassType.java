@@ -14,7 +14,6 @@ public enum PassType {
         type = typ;
     }
 
-
     public String getType() {
         return type;
     }
