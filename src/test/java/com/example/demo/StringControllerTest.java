@@ -20,10 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(StringController.class)
 public class StringControllerTest {
 
-    @Test
-    public void start() {
-    }
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -31,14 +27,10 @@ public class StringControllerTest {
     private StringGenerator generator;
 
     @Test
-    public void shouldReturnDefaultMessage() throws Exception {
-        when(generator.getText()).thenReturn("A");
+    public void start() throws Exception {
+        when(generator.getText()).thenReturn("A12nka");
         this.mockMvc.perform(get("/start")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("A")));
+                .andExpect(content().string(containsString("A12nka")));
 
-    }
-
-    @Test
-    public void test() {
     }
 }
