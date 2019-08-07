@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StringController {
 
-    @RequestMapping("/greeting")
-    public StringGenerator greeting() {
+    @RequestMapping("/start")
+    public StringGenerator start() {
         return new StringGenerator();
     }
 }
+
