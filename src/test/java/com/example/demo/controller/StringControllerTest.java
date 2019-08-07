@@ -1,11 +1,17 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.DemoApplication;
+import com.example.demo.services.StringGeneratorServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
@@ -22,14 +28,13 @@ public class StringControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private StringGenerator generator;
+    @Mock
+    private StringGeneratorServiceImpl service;
 
     @Test
     public void start() throws Exception {
-        when(generator.getText()).thenReturn("A12nka");
-        this.mockMvc.perform(get("/start")).andDo(print()).andExpect(status().isOk())
+        when(service.getText()).thenReturn("A12nka");
+        mockMvc.perform(get("/start")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("A12nka")));
 
     }
