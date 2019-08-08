@@ -39,5 +39,4 @@ public class BooksServiceImplTest {
         assertTrue(booksInfo.contains("numberOfPages"));
         assertTrue(booksInfo.contains("language"));
     }
-
 }
