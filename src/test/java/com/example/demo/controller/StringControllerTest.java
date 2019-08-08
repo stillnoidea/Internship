@@ -34,7 +34,6 @@ public class StringControllerTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(stringController).build();
     }
 
