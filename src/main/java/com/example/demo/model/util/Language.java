@@ -16,7 +16,7 @@ public enum Language {
     SPANISH("Spanish"),
     TURKISH("Turkish");
 
-    String name;
+    private String name;
 
     Language(String name) {
         this.name = name;
