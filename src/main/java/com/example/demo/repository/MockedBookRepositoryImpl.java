@@ -11,8 +11,8 @@ public class MockedBookRepositoryImpl implements BookRepository {
 
     private ArrayList<Book> books;
 
-    MockedBookRepositoryImpl(ArrayList<Book> books) {
-        this.books = books;
+    MockedBookRepositoryImpl() {
+        this.books = new ArrayList<>(15);
     }
 
     @Override
