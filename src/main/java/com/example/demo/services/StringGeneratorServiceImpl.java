@@ -9,10 +9,10 @@ import java.util.Random;
 public class StringGeneratorServiceImpl implements StringGeneratorService {
 
     private final static int MAX_TEXT_LENGTH = 180;
-    private final static char[] TEXT_CHARS = "[A-Za-z0-9]+".toCharArray();
+    private final static char[] TEXT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 
     private int generateTextLength() {
-        return new Random().nextInt(MAX_TEXT_LENGTH) + 1;
+        return new Random().nextInt(MAX_TEXT_LENGTH) + 5;
     }
 
     public String getText() {

@@ -1,18 +1,17 @@
 package com.example.demo.controller;
 
-import com.example.demo.DemoApplication;
 import com.example.demo.services.StringGeneratorServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -22,20 +21,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(StringController.class)
+@RunWith(MockitoJUnitRunner.class)
+@WebMvcTest(controllers = StringController.class)
 public class StringControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Mock
     private StringGeneratorServiceImpl service;
+    @InjectMocks
+    private StringController stringController;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(stringController).build();
+    }
 
     @Test
-    public void start() throws Exception {
+    public void startTest() throws Exception {
         when(service.getText()).thenReturn("A12nka");
-        mockMvc.perform(get("/start")).andDo(print()).andExpect(status().isOk())
+        mockMvc.perform(get("/start"))
+                .andDo(print())
+                .andExpect(status()
+                        .isOk())
                 .andExpect(content().string(containsString("A12nka")));
-
     }
 }
