@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @WebMvcTest(controllers = StringController.class)
 public class StringControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
     @Mock

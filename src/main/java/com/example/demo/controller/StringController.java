@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StringController {
 
-    private StringGeneratorService service;
+    private final StringGeneratorService service;
 
     @Autowired
     public StringController(StringGeneratorServiceImpl service) {
@@ -18,8 +18,7 @@ public class StringController {
     }
 
     @RequestMapping("/start")
-    public @ResponseBody
-    String start() {
+    public @ResponseBody String start() {
         return service.getText();
     }
 }
