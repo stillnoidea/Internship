@@ -37,4 +37,9 @@ public class Book {
 
         return details.toString();
     }
+
+    @Override
+    public String toString() {
+        return getMainInfo() + "\n" + getDetails();
+    }
 }
