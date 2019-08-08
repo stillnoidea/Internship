@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 public interface BookRepository {
-    void findAll();
+    List findAll();
 }
