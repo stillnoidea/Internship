@@ -7,4 +7,6 @@ import java.util.List;
 public interface BookService {
 
     List<Book> findAll();
+
+    List<Book> getBooksContainingWord(String word);
 }
