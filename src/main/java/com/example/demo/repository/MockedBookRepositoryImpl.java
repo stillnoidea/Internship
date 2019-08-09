@@ -11,15 +11,15 @@ import java.util.List;
 @Component
 public class MockedBookRepositoryImpl implements BookRepository {
 
-    private ArrayList<Book> books;
+    private List<Book> books;
 
     MockedBookRepositoryImpl() {
-        this.books = new ArrayList<>(15);
+        this.books = new ArrayList<>();
         initializeBooks();
     }
 
     @Override
-    public List findAll() {
+    public List<Book> findAll() {
         return books;
     }
 
