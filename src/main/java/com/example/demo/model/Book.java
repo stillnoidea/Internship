@@ -60,7 +60,7 @@ public class Book {
         return numberOfPages;
     }
 
-    public Language getLanguage() {
-        return language;
+    public String getLanguage() {
+        return language.toString();
     }
 }
