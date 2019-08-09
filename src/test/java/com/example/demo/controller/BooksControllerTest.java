@@ -31,18 +31,30 @@ public class BooksControllerTest {
     private BooksServiceImpl service;
     @InjectMocks
     private BooksController booksController;
+    private List result;
 
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(booksController).build();
+        List result= new ArrayList();
+        result.add(1);
     }
 
     @Test
-    public void start() throws Exception {
-        List result= new ArrayList();
-        result.add(1);
+    public void libraryTest() throws Exception {
         when(service.findAll()).thenReturn(result);
         mockMvc.perform(get("/library"))
+                .andDo(print())
+                .andExpect(status()
+                        .isOk())
+                .andExpect(content().string(containsString("1")));
+    }
+
+
+    @Test
+    public void searchTest() throws Exception {
+        when(service.getBooksContainingWord("jam")).thenReturn(result);
+        mockMvc.perform(get("/search?word=jam"))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
