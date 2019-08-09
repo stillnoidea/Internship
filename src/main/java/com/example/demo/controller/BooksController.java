@@ -27,7 +27,7 @@ public class BooksController {
 
     @RequestMapping("/search")
     public @ResponseBody
-    List search(@RequestParam String soughtWord) {
+    List search(@RequestParam(name = "word") String soughtWord) {
         return service.getBooksContainingWord(soughtWord);
     }
 }
