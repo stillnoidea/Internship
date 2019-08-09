@@ -1,8 +1,10 @@
 package com.example.demo.services;
 
+import com.example.demo.model.Book;
+
 import java.util.List;
 
 public interface BookService {
 
-    List getBooksInfo();
+    List<Book> findAll();
 }
