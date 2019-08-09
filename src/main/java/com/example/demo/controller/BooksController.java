@@ -11,17 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class BooksController {
 
     private final BooksServiceImpl service;
-    private final MockedBookRepositoryImpl repository;
 
     @Autowired
     public BooksController(BooksServiceImpl service, MockedBookRepositoryImpl repository) {
         this.service = service;
-        this.repository = repository;
     }
 
     @RequestMapping("/library")
     public @ResponseBody
     String start() {
-        return service.getBooksInfo(repository);
+        return service.getBooksInfo();
     }
 }
