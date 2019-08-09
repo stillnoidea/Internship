@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.repository.MockedBookRepositoryImpl;
 import com.example.demo.services.BooksServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -29,8 +31,6 @@ public class BooksControllerTest {
     private BooksServiceImpl service;
     @InjectMocks
     private BooksController booksController;
-    @Mock
-    private MockedBookRepositoryImpl mockedBookRepository;
 
     @Before
     public void setUp() {
@@ -39,11 +39,13 @@ public class BooksControllerTest {
 
     @Test
     public void start() throws Exception {
-        when(service.getBooksInfo(mockedBookRepository)).thenReturn("Harry Potter");
+        List result= new ArrayList();
+        result.add(1);
+        when(service.getBooksInfo()).thenReturn(result);
         mockMvc.perform(get("/library"))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
-                .andExpect(content().string(containsString("Harry Potter")));
+                .andExpect(content().string(containsString("1")));
     }
 }
