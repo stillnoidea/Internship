@@ -21,11 +21,12 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compile 'org.apache.commons:commons-lang3:3.9'
+    compile 'org.apache.commons:commons-lang3' + "${appacheCommonsVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 project.ext {
     springBootVersion = "2.1.6.RELEASE"
     springDependencyManagementVersion = "2.1.6.RELEASE"
+    appacheCommonsVersion = '3.9'
 }

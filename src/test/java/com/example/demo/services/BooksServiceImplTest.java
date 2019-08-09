@@ -1,36 +1,46 @@
 package com.example.demo.services;
 
+import com.example.demo.repository.BookRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class BooksServiceImplTest {
-    @Autowired
+    @Mock
+    private BookRepository bookRepository;
+    @InjectMocks
     private BooksServiceImpl service;
-    private List booksInfo;
+    private List books;
 
     @Before
     public void setUp() {
-        booksInfo = service.getBooksInfo();
+        List list = new ArrayList<>();
+        list.add(12);
+        list.add(1);
+        Mockito.when(bookRepository.findAll()).thenReturn(list);
+        books = service.findAll();
     }
 
     @Test
     public void shouldBeNotEmpty() {
-        assertFalse(booksInfo.isEmpty());
+        assertFalse(books.isEmpty());
     }
 
     @Test
     public void shouldContainsTwentyOneBooks() {
-        assertEquals(21, booksInfo.size());
+        assertEquals(2, books.size());
     }
 }
