@@ -8,5 +8,5 @@ public interface BookService {
 
     List<Book> findAll();
 
-    List<Book> getBooksContainingWord(String word);
+    List<Book> findBooksContainingWord(String word);
 }

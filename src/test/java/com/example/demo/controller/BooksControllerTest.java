@@ -53,7 +53,7 @@ public class BooksControllerTest {
 
     @Test
     public void searchTest() throws Exception {
-        when(service.getBooksContainingWord("jam")).thenReturn(result);
+        when(service.findBooksContainingWord("jam")).thenReturn(result);
         mockMvc.perform(get("/search?word=jam"))
                 .andDo(print())
                 .andExpect(status()

@@ -24,7 +24,7 @@ public class BooksServiceImpl implements BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> getBooksContainingWord(String word) {
+    public List<Book> findBooksContainingWord(String word) {
         Stream<Book> books = booksContainingWord(word);
         return books.collect(Collectors.toList());
     }
