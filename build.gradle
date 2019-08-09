@@ -1,7 +1,7 @@
 plugins {
     id 'org.springframework.boot' version "${project.ext.springBootVersion}"
     id 'java'
-    id "io.spring.dependency-management" version "${project.ext.springDependencyManagementVersion}"
+    id "io.spring.dependency-management" version "${project.ext.springBootVersion}"
 }
 
 group = 'com.example'
@@ -27,6 +27,5 @@ dependencies {
 
 project.ext {
     springBootVersion = "2.1.6.RELEASE"
-    springDependencyManagementVersion = "2.1.6.RELEASE"
     appacheCommonsVersion = '3.9'
 }

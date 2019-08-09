@@ -28,34 +28,38 @@ public class BooksServiceImplTest {
     private BooksServiceImpl service;
     private List<Book> books;
 
-    @Before
-    public void setUp() {
-        List<Book> list = new ArrayList<>();
-        list.add(new Book("Harry Potter and the Philosopher's Stone", "J.K. Rowling", LocalDate.of(1997, 6, 26), 223, Language.ENGLISH));
-        list.add(new Book("The Great Gatsby", "F. Scott Fitzgerald", LocalDate.of(1926, 2, 10), 218, Language.AMERICAN));
-        Mockito.when(bookRepository.findAll()).thenReturn(list);
-        books = service.findAll();
-    }
-
     @Test
     public void shouldBeNotEmpty() {
+        Mockito.when(bookRepository.findAll()).thenReturn(initializeBooksListMock());
+        books = service.findAll();
         assertFalse(books.isEmpty());
     }
 
     @Test
     public void shouldContainsTwentyOneBooks() {
+        Mockito.when(bookRepository.findAll()).thenReturn(initializeBooksListMock());
+        books = service.findAll();
         assertEquals(2, books.size());
     }
 
     @Test
     public void shouldNotBeEmpty() {
+        books = initializeBooksListMock();
         books = service.findBooksContainingWord("a");
         assertFalse(books.isEmpty());
     }
 
     @Test
     public void shouldContainBookObject() {
+        books = initializeBooksListMock();
         books = service.findBooksContainingWord("a");
         assertEquals(Book.class, books.get(0).getClass());
+    }
+
+    private List<Book> initializeBooksListMock() {
+        List<Book> list = new ArrayList<>();
+        list.add(new Book("Harry Potter and the Philosopher's Stone", "J.K. Rowling", LocalDate.of(1997, 6, 26), 223, Language.ENGLISH));
+        list.add(new Book("The Great Gatsby", "F. Scott Fitzgerald", LocalDate.of(1926, 2, 10), 218, Language.AMERICAN));
+        return list;
     }
 }

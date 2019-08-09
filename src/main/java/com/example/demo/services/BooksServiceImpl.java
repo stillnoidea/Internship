@@ -15,7 +15,7 @@ public class BooksServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Autowired
-    BooksServiceImpl(BookRepository bookRepository) {
+    public BooksServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
@@ -25,8 +25,7 @@ public class BooksServiceImpl implements BookService {
     }
 
     public List<Book> findBooksContainingWord(String word) {
-        Stream<Book> books = booksContainingWord(word);
-        return books.collect(Collectors.toList());
+        return booksContainingWord(word).collect(Collectors.toList());
     }
 
     private Stream<Book> booksContainingWord(String word) {
@@ -40,8 +39,12 @@ public class BooksServiceImpl implements BookService {
     }
 
     private String bindBookFields(Book book) {
-        return book.getAuthor() +
-                book.getLanguage() +
-                book.getTitle();
+        StringBuilder sb = new StringBuilder();
+        sb.append(book.getAuthor())
+                .append(" ")
+                .append(book.getLanguage())
+                .append(" ")
+                .append(book.getTitle());
+        return sb.toString();
     }
 }
