@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,24 +20,14 @@ public class BooksController {
     }
 
     @RequestMapping("/library")
-    public @ResponseBody List getLibrary() {
+    public @ResponseBody
+    List getLibrary() {
         return service.findAll();
     }
 
     @RequestMapping("/search")
-    public @ResponseBody List search(@RequestParam String search) {
-        List result = new ArrayList();
-        List allBooks = service.findAll();
-
-        for (Object book : allBooks) {
-            if (isBookContainingSearchedWord(book, search)) {
-                result.add(book);
-            }
-        }
-        return result;
-    }
-
-    private boolean isBookContainingSearchedWord(Object book, String searchedWord) {
-        return true;
+    public @ResponseBody
+    List search(@RequestParam String soughtWord) {
+        return service.getBooksContainingWord(soughtWord);
     }
 }
