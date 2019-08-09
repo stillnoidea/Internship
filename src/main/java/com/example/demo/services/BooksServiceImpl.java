@@ -34,17 +34,6 @@ public class BooksServiceImpl implements BookService {
     }
 
     private boolean isBookContainingWord(Book book, String word) {
-        String bookInfo = bindBookFields(book);
-        return bookInfo.contains(word);
-    }
-
-    private String bindBookFields(Book book) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(book.getAuthor())
-                .append(" ")
-                .append(book.getLanguage())
-                .append(" ")
-                .append(book.getTitle());
-        return sb.toString();
+        return book.getAuthor().contains(word)||book.getTitle().contains(word)||book.getLanguage().contains(word);
     }
 }
