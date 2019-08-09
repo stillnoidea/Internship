@@ -41,7 +41,7 @@ public class BooksControllerTest {
     public void start() throws Exception {
         List result= new ArrayList();
         result.add(1);
-        when(service.getBooksInfo()).thenReturn(result);
+        when(service.findAll()).thenReturn(result);
         mockMvc.perform(get("/library"))
                 .andDo(print())
                 .andExpect(status()

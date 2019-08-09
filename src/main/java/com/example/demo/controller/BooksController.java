@@ -21,14 +21,14 @@ public class BooksController {
     }
 
     @RequestMapping("/library")
-    public @ResponseBody List start() {
-        return service.getBooksInfo();
+    public @ResponseBody List getLibrary() {
+        return service.findAll();
     }
 
     @RequestMapping("/search")
     public @ResponseBody List search(@RequestParam String search) {
         List result = new ArrayList();
-        List allBooks = service.getBooksInfo();
+        List allBooks = service.findAll();
 
         for (Object book : allBooks) {
             if (isBookContainingSearchedWord(book, search)) {
@@ -39,6 +39,6 @@ public class BooksController {
     }
 
     private boolean isBookContainingSearchedWord(Object book, String searchedWord) {
-        return book.toString().contains(searchedWord);
+        return true;
     }
 }
