@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
-import com.example.demo.repository.MockedBookRepositoryImpl;
+import com.example.demo.model.Book;
+import com.example.demo.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,15 +10,15 @@ import java.util.List;
 @Service
 public class BooksServiceImpl implements BookService {
 
-    private MockedBookRepositoryImpl mockedBookRepository;
+    private BookRepository bookRepository;
 
     @Autowired
-    BooksServiceImpl(MockedBookRepositoryImpl mockedBookRepository) {
-        this.mockedBookRepository = mockedBookRepository;
+    BooksServiceImpl(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
-    public List getBooksInfo() {
-        return mockedBookRepository.findAll();
+    public List<Book> findAll() {
+        return bookRepository.findAll();
     }
 }
