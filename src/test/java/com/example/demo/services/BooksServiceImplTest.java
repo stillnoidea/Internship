@@ -44,14 +44,14 @@ public class BooksServiceImplTest {
 
     @Test
     public void shouldNotBeEmpty() {
-        books = initializeBooksListMock();
+        Mockito.when(service.findBooksContainingWord("a")).thenReturn(initializeBooksListMock());
         books = service.findBooksContainingWord("a");
         assertFalse(books.isEmpty());
     }
 
     @Test
     public void shouldContainBookObject() {
-        books = initializeBooksListMock();
+        Mockito.when(service.findBooksContainingWord("a")).thenReturn(initializeBooksListMock());
         books = service.findBooksContainingWord("a");
         assertEquals(Book.class, books.get(0).getClass());
     }
