@@ -9,9 +9,10 @@ import java.util.Random;
 public class StringGeneratorServiceImpl implements StringGeneratorService {
 
     private final static int MAX_TEXT_LENGTH = 180;
+    private final static int MIN_TEXT_LENGTH = 5;
 
     private int generateTextLength() {
-        return new Random().nextInt(MAX_TEXT_LENGTH) + 5;
+        return new Random().nextInt(MAX_TEXT_LENGTH) + MIN_TEXT_LENGTH;
     }
 
     public String getText() {

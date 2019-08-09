@@ -1,12 +1,7 @@
-project.ext{
-    springBootVersion = "2.1.6.RELEASE"
-    appacheCommonsVersion = "3.0"
-}
-
 plugins {
     id 'org.springframework.boot' version "${project.ext.springBootVersion}"
     id 'java'
-    id 'io.spring.dependency-management'
+    id "io.spring.dependency-management" version "${project.ext.springBootVersion}"
 }
 
 group = 'com.example'
@@ -25,7 +20,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.apache.commons', name: 'commons-lang3', version: "${project.ext.appacheCommonsVersion}"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: "${appacheCommonsVersion}"
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+}
+
+project.ext {
+    springBootVersion = "2.1.6.RELEASE"
+    appacheCommonsVersion = '3.9'
 }
