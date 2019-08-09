@@ -1,8 +1,8 @@
 package com.example.demo.services;
 
-import com.example.demo.repository.MockedBookRepositoryImpl;
+import java.util.List;
 
 public interface BookService {
 
-    String getBooksInfo(MockedBookRepositoryImpl mockedBookRepository);
+    List getBooksInfo();
 }
