@@ -1,42 +1,36 @@
 package com.example.demo.services;
 
-import com.example.demo.repository.MockedBookRepositoryImpl;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertTrue;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BooksServiceImplTest {
     @Autowired
-    private MockedBookRepositoryImpl mockedBookRepository;
-    @Autowired
     private BooksServiceImpl service;
+    private List booksInfo;
 
-    @Test
-    public void shouldContainsCurlyBrackets() {
-        String booksInfo = service.getBooksInfo(mockedBookRepository);
-        assertTrue(booksInfo.contains("{"));
-        assertTrue(booksInfo.contains("}"));
+    @Before
+    public void setUp() {
+        booksInfo = service.getBooksInfo();
     }
 
     @Test
-    public void shouldContainsColon() {
-        String booksInfo = service.getBooksInfo(mockedBookRepository);
-        assertTrue(booksInfo.contains(":"));
+    public void shouldBeNotEmpty() {
+        assertFalse(booksInfo.isEmpty());
     }
 
     @Test
-    public void shouldContainsDefaultWords() {
-        String booksInfo = service.getBooksInfo(mockedBookRepository);
-        assertTrue(booksInfo.contains("title"));
-        assertTrue(booksInfo.contains("author"));
-        assertTrue(booksInfo.contains("releaseDate"));
-        assertTrue(booksInfo.contains("numberOfPages"));
-        assertTrue(booksInfo.contains("language"));
+    public void shouldContainsTwentyOneBooks() {
+        assertEquals(21, booksInfo.size());
     }
 }
