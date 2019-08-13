@@ -1,17 +1,17 @@
 package com.example.demo.dto;
 
-public class BookMainInfo {
+public class BookFilter {
     private String author;
     private String title;
     private String language;
 
-    public BookMainInfo(String author, String title, String language) {
+    public BookFilter(String author, String title, String language) {
         this.author = author;
         this.title = title;
         this.language = language;
     }
 
-    public BookMainInfo() {
+    public BookFilter() {
     }
 
     public String getAuthor() {
