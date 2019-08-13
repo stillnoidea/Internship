@@ -20,8 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @WebMvcTest(controllers = BooksController.class)
@@ -54,17 +53,18 @@ public class BooksControllerTest {
 
     @Test
     public void searchTest() throws Exception {
-        when(service.findBooksContainingWord("jam")).thenReturn(result);
+        when(service.findByWord("jam")).thenReturn(result);
         mockMvc.perform(get("/search?word=jam"))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
-                .andExpect(content().string(containsString("1")));
+                .andExpect(content().string(containsString("1")))
+                .andExpect(jsonPath("$[0]").exists());
     }
 
     @Test
     public void filterTest() throws Exception {
-        when(service.findBooksWithParams(any())).thenReturn(result);
+        when(service.findByParams(any())).thenReturn(result);
         mockMvc.perform(get("/filter"))
                 .andDo(print())
                 .andExpect(status()
