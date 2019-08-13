@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.services.BooksServiceImpl;
+import com.example.demo.services.BookServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,7 +29,8 @@ public class BooksControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Mock
-    private BooksServiceImpl service;
+    private BookServiceImpl service;
+
     @InjectMocks
     private BooksController booksController;
     private List result;
@@ -36,7 +38,7 @@ public class BooksControllerTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(booksController).build();
-        List result= new ArrayList();
+        result = new ArrayList();
         result.add(1);
     }
 
@@ -50,11 +52,20 @@ public class BooksControllerTest {
                 .andExpect(content().string(containsString("1")));
     }
 
-
     @Test
     public void searchTest() throws Exception {
         when(service.findBooksContainingWord("jam")).thenReturn(result);
         mockMvc.perform(get("/search?word=jam"))
+                .andDo(print())
+                .andExpect(status()
+                        .isOk())
+                .andExpect(content().string(containsString("1")));
+    }
+
+    @Test
+    public void filterTest() throws Exception {
+        when(service.findBooksWithParams(any())).thenReturn(result);
+        mockMvc.perform(get("/filter"))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
