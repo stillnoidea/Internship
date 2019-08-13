@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class BooksServiceImpl implements BookService {
+public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
 
     @Autowired
-    public BooksServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
