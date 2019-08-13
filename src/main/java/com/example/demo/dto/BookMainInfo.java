@@ -11,6 +11,9 @@ public class BookMainInfo {
         this.language = language;
     }
 
+    public BookMainInfo() {
+    }
+
     public String getAuthor() {
         return author;
     }
