@@ -1,6 +1,6 @@
 package com.example.demo.services;
 
-import com.example.demo.dto.BookMainInfo;
+import com.example.demo.dto.BookFilter;
 import com.example.demo.model.Book;
 import com.example.demo.model.util.Language;
 import com.example.demo.repository.BookRepository;
@@ -23,8 +23,6 @@ import static org.junit.Assert.*;
 public class BooksServiceImplTest {
     @Mock
     private BookRepository bookRepository;
-    @Mock
-    private BookMainInfo bookMainInfo;
     @InjectMocks
     private BookServiceImpl service;
     private List<Book> books;
@@ -45,15 +43,15 @@ public class BooksServiceImplTest {
 
     @Test
     public void shouldNotBeEmpty() {
-        Mockito.when(service.findBooksContainingWord("a")).thenReturn(initializeBooksListMock());
-        books = service.findBooksContainingWord("a");
+        Mockito.when(service.findByWord("a")).thenReturn(initializeBooksListMock());
+        books = service.findByWord("a");
         assertFalse(books.isEmpty());
     }
 
     @Test
     public void shouldContainBookObject() {
-        Mockito.when(service.findBooksContainingWord("a")).thenReturn(initializeBooksListMock());
-        books = service.findBooksContainingWord("a");
+        Mockito.when(service.findByWord("a")).thenReturn(initializeBooksListMock());
+        books = service.findByWord("a");
         assertEquals(Book.class, books.get(0).getClass());
     }
 
@@ -65,22 +63,25 @@ public class BooksServiceImplTest {
     }
 
     @Test
-    public void shouldReturnNull() {
-        assertNull(service.findBooksWithParams(bookMainInfo));
+    public void shouldThrowException() throws RuntimeException {
+        service.findByParams(null);
     }
+
 
     @Test
     public void shouldReturnEmptyList() {
-        Mockito.when(bookMainInfo.getAuthor()).thenReturn("Carl");
+        BookFilter bookInfo = new BookFilter();
+        bookInfo.setAuthor("Carl");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
-        assertTrue(service.findBooksWithParams(bookMainInfo).isEmpty());
+        assertTrue(service.findByParams(bookInfo).isEmpty());
     }
 
     @Test
     public void shouldReturnOneElementList() {
-        Mockito.when(bookMainInfo.getAuthor()).thenReturn("Rowling");
+        BookFilter bookInfo = new BookFilter();
+        bookInfo.setAuthor("Rowling");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
-        List<Book> books = service.findBooksWithParams(bookMainInfo);
+        List<Book> books = service.findByParams(bookInfo);
         assertEquals(1, books.size());
         assertEquals("J.K. Rowling", books.get(0).getAuthor());
         assertEquals(223, books.get(0).getNumberOfPages());
@@ -88,9 +89,10 @@ public class BooksServiceImplTest {
 
     @Test
     public void shouldReturnTwoElementList() {
-        Mockito.when(bookMainInfo.getTitle()).thenReturn("a");
+        BookFilter bookInfo = new BookFilter();
+        bookInfo.setAuthor("a");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
-        List<Book> books = service.findBooksWithParams(bookMainInfo);
+        List<Book> books = service.findByParams(bookInfo);
         assertEquals(2, books.size());
         assertEquals("J.K. Rowling", books.get(0).getAuthor());
         assertEquals(223, books.get(0).getNumberOfPages());
@@ -100,10 +102,11 @@ public class BooksServiceImplTest {
 
     @Test
     public void shouldReturnHarryPotter() {
-        Mockito.when(bookMainInfo.getTitle()).thenReturn("a");
-        Mockito.when(bookMainInfo.getAuthor()).thenReturn("Row");
+        BookFilter bookInfo = new BookFilter();
+        bookInfo.setAuthor("a");
+        bookInfo.setTitle("Harry");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
-        List<Book> books = service.findBooksWithParams(bookMainInfo);
+        List<Book> books = service.findByParams(bookInfo);
         assertEquals(1, books.size());
         assertEquals("J.K. Rowling", books.get(0).getAuthor());
         assertEquals(223, books.get(0).getNumberOfPages());
