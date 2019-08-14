@@ -25,17 +25,14 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll();
     }
 
+    @Override
     public List<Book> findByWord(String word) {
         return filterBooksContainingWord(word).collect(Collectors.toList());
     }
 
     private Stream<Book> filterBooksContainingWord(String word) {
-        Stream<Book> bookStream = getBooksStream();
+        Stream<Book> bookStream = findAll().stream();
         return bookStream.filter(book -> isBookContainingWord(book, word));
-    }
-
-    private Stream<Book> getBooksStream() {
-        return findAll().stream();
     }
 
     private boolean isBookContainingWord(Book book, String word) {
@@ -63,6 +60,7 @@ public class BookServiceImpl implements BookService {
         return true;
     }
 
+    @Override
     public List<Book> findByParams(BookFilter bookParams) {
         if (bookParams==null || isBookFilterEmpty(bookParams)) {
             throw new RuntimeException("There must be at least one parameter");
@@ -75,7 +73,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private Stream<Book> filterBooksWithParams(BookFilter bookParams) {
-        Stream<Book> bookStream = getBooksStream();
+        Stream<Book> bookStream = findAll().stream();
         return bookStream.filter(book -> isTitleMatchingWord(book, bookParams.getTitle())
                 && isAuthorMatchingWord(book, bookParams.getAuthor())
                 && isLanguageMatchingWord(book, bookParams.getLanguage()));
