@@ -36,33 +36,19 @@ public class BookServiceImpl implements BookService {
     }
 
     private boolean isBookContainingWord(Book book, String word) {
-        return isAuthorMatchingWord(book, word) || isTitleMatchingWord(book, word) || isLanguageMatchingWord(book, word);
+        return isBookInfoContainingWord(book.getAuthor(), word) || isBookInfoContainingWord(book.getTitle(), word) || isBookInfoContainingWord(book.getLanguage(), word);
     }
 
-    private boolean isAuthorMatchingWord(Book book, String author) {
+    private boolean isBookInfoContainingWord(String book, String author) {
         if (author != null) {
-            return book.getAuthor().toLowerCase().contains(author.toLowerCase());
-        }
-        return true;
-    }
-
-    private boolean isTitleMatchingWord(Book book, String title) {
-        if (title != null) {
-            return book.getTitle().toLowerCase().contains(title.toLowerCase());
-        }
-        return true;
-    }
-
-    private boolean isLanguageMatchingWord(Book book, String language) {
-        if (language != null) {
-            return book.getLanguage().toLowerCase().contains(language.toLowerCase());
+            return book.toLowerCase().contains(author.toLowerCase());
         }
         return true;
     }
 
     @Override
     public List<Book> findByParams(BookFilter bookParams) {
-        if (bookParams==null || isBookFilterEmpty(bookParams)) {
+        if (bookParams == null || isBookFilterEmpty(bookParams)) {
             throw new RuntimeException("There must be at least one parameter");
         }
         return filterBooksWithParams(bookParams).collect(Collectors.toList());
@@ -74,8 +60,8 @@ public class BookServiceImpl implements BookService {
 
     private Stream<Book> filterBooksWithParams(BookFilter bookParams) {
         Stream<Book> bookStream = findAll().stream();
-        return bookStream.filter(book -> isTitleMatchingWord(book, bookParams.getTitle())
-                && isAuthorMatchingWord(book, bookParams.getAuthor())
-                && isLanguageMatchingWord(book, bookParams.getLanguage()));
+        return bookStream.filter(book -> isBookInfoContainingWord(book.getTitle(), bookParams.getTitle())
+                && isBookInfoContainingWord(book.getAuthor(), bookParams.getAuthor())
+                && isBookInfoContainingWord(book.getLanguage(), bookParams.getLanguage()));
     }
 }
