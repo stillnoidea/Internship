@@ -29,29 +29,49 @@ public class BookServiceImplTest {
 
     @Test
     public void shouldBeNotEmpty() {
+        //given
         Mockito.when(bookRepository.findAll()).thenReturn(initializeBooksListMock());
+
+        //when
         books = service.findAll();
+
+        //then
         assertFalse(books.isEmpty());
     }
 
     @Test
     public void shouldContainsTwentyOneBooks() {
+        //given
         Mockito.when(bookRepository.findAll()).thenReturn(initializeBooksListMock());
+
+        //when
         books = service.findAll();
+
+        //then
         assertEquals(2, books.size());
     }
 
     @Test
     public void shouldNotBeEmpty() {
+        //given
         Mockito.when(service.findByWord("a")).thenReturn(initializeBooksListMock());
+
+        //when
         books = service.findByWord("a");
+
+        //then
         assertFalse(books.isEmpty());
     }
 
     @Test
     public void shouldContainBookObject() {
+        //given
         Mockito.when(service.findByWord("a")).thenReturn(initializeBooksListMock());
+
+        //when
         books = service.findByWord("a");
+
+        //then
         assertEquals(Book.class, books.get(0).getClass());
     }
 
@@ -62,26 +82,36 @@ public class BookServiceImplTest {
         return list;
     }
 
-    @Test
-    public void shouldThrowException() throws RuntimeException {
+    @Test(expected =  RuntimeException.class)
+    public void shouldThrowException() {
         service.findByParams(null);
     }
 
-
     @Test
     public void shouldReturnEmptyList() {
+        //given
         BookFilter bookInfo = new BookFilter();
         bookInfo.setAuthor("Carl");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
-        assertTrue(service.findByParams(bookInfo).isEmpty());
+
+        //when
+        books = service.findByParams(bookInfo);
+
+        //then
+        assertTrue(books.isEmpty());
     }
 
     @Test
     public void shouldReturnOneElementList() {
+        //given
         BookFilter bookInfo = new BookFilter();
         bookInfo.setAuthor("Rowling");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
+
+        //when
         List<Book> books = service.findByParams(bookInfo);
+
+        //then
         assertEquals(1, books.size());
         assertEquals("J.K. Rowling", books.get(0).getAuthor());
         assertEquals(223, books.get(0).getNumberOfPages());
@@ -89,10 +119,15 @@ public class BookServiceImplTest {
 
     @Test
     public void shouldReturnTwoElementList() {
+        //given
         BookFilter bookInfo = new BookFilter();
-        bookInfo.setAuthor("a");
+        bookInfo.setAuthor("o");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
+
+        //when
         List<Book> books = service.findByParams(bookInfo);
+
+        //then
         assertEquals(2, books.size());
         assertEquals("J.K. Rowling", books.get(0).getAuthor());
         assertEquals(223, books.get(0).getNumberOfPages());
@@ -102,11 +137,16 @@ public class BookServiceImplTest {
 
     @Test
     public void shouldReturnHarryPotter() {
+        //given
         BookFilter bookInfo = new BookFilter();
-        bookInfo.setAuthor("a");
+        bookInfo.setAuthor("o");
         bookInfo.setTitle("Harry");
         Mockito.when(service.findAll()).thenReturn(initializeBooksListMock());
+
+        //when
         List<Book> books = service.findByParams(bookInfo);
+
+        //then
         assertEquals(1, books.size());
         assertEquals("J.K. Rowling", books.get(0).getAuthor());
         assertEquals(223, books.get(0).getNumberOfPages());

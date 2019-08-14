@@ -42,8 +42,13 @@ public class BookControllerTest {
 
     @Test
     public void libraryTest() throws Exception {
+        //given
         when(service.findAll()).thenReturn(result);
+
+        //when
         mockMvc.perform(get("/library"))
+
+                //then
                 .andExpect(status()
                         .isOk())
                 .andExpect(jsonPath("$[0]").exists())
@@ -53,8 +58,13 @@ public class BookControllerTest {
 
     @Test
     public void searchTest() throws Exception {
+        //given
         when(service.findByWord("jam")).thenReturn(result);
+
+        //when
         mockMvc.perform(get("/search?word=jam"))
+
+                //then
                 .andExpect(status()
                         .isOk())
                 .andExpect(jsonPath("$[0]").exists())
@@ -64,8 +74,13 @@ public class BookControllerTest {
 
     @Test
     public void filterTest() throws Exception {
+        //given
         when(service.findByParams(any())).thenReturn(result);
+
+        //when
         mockMvc.perform(get("/filter"))
+
+                //then
                 .andExpect(status()
                         .isOk())
                 .andExpect(jsonPath("$[0]").exists())
