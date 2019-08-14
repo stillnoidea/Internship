@@ -2,5 +2,7 @@ package com.example.demo.services;
 
 public interface StringGeneratorService {
 
-    String getText();
+    static String getText() {
+        return "";
+    }
 }

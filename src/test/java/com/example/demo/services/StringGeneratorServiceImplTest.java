@@ -17,15 +17,23 @@ public class StringGeneratorServiceImplTest {
 
     @Test
     public void checkTextLength() {
+        //given
         String text = service.getText();
+
+        //when
         int textLength = text.length();
+
+        //then
         assertTrue(textLength > 0);
         assertTrue(textLength < 180);
     }
 
     @Test
     public void getTextTest() {
+        //when
         String text = service.getText();
+
+        //then
         assertTrue(text.length() < 180);
         assertFalse(text.isEmpty());
     }
