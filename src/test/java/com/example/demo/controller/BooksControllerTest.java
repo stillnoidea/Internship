@@ -15,12 +15,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 @WebMvcTest(controllers = BooksController.class)
@@ -45,30 +44,32 @@ public class BooksControllerTest {
     public void libraryTest() throws Exception {
         when(service.findAll()).thenReturn(result);
         mockMvc.perform(get("/library"))
-                .andDo(print())
                 .andExpect(status()
                         .isOk())
-                .andExpect(content().string(containsString("1")));
+                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$[1]").doesNotExist())
+                .andExpect(jsonPath("$[0]").isNumber());
     }
 
     @Test
     public void searchTest() throws Exception {
         when(service.findByWord("jam")).thenReturn(result);
         mockMvc.perform(get("/search?word=jam"))
-                .andDo(print())
                 .andExpect(status()
                         .isOk())
-                .andExpect(content().string(containsString("1")))
-                .andExpect(jsonPath("$[0]").exists());
+                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$[1]").doesNotExist())
+                .andExpect(jsonPath("$[0]").isNumber());
     }
 
     @Test
     public void filterTest() throws Exception {
         when(service.findByParams(any())).thenReturn(result);
         mockMvc.perform(get("/filter"))
-                .andDo(print())
                 .andExpect(status()
                         .isOk())
-                .andExpect(content().string(containsString("1")));
+                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$[1]").doesNotExist())
+                .andExpect(jsonPath("$[0]").isNumber());
     }
 }
