@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class BooksController {
+public class BookController {
 
     private final BookService service;
 
     @Autowired
-    public BooksController(BookService service) {
+    public BookController(BookService service) {
         this.service = service;
     }
 

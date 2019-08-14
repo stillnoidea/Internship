@@ -22,15 +22,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(controllers = BooksController.class)
-public class BooksControllerTest {
+@WebMvcTest(controllers = BookController.class)
+public class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Mock
     private BookServiceImpl service;
 
     @InjectMocks
-    private BooksController booksController;
+    private BookController booksController;
     private List result;
 
     @Before

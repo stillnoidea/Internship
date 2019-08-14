@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class BooksServiceImplTest {
+public class BookServiceImplTest {
     @Mock
     private BookRepository bookRepository;
     @InjectMocks
